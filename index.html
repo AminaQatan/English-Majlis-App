@@ -253,30 +253,30 @@ const ic=(n,c)=>`<svg class="i ${c||''}" viewBox="0 0 24 24" aria-hidden="true">
 const SC=[
  {id:'greet',t:'Meet & greet',s:'Introduce yourself',r:'your new friend',y:'yourself',tag:'{bot} is your new friend · just be yourself',topic:'getting to know each other',ic:'chat',c:'#0d8487',
   st:[["Hello {name}! I'm {bot}, your English friend. Nice to meet you! Where are you from?",["Nice to meet you too. I'm from Salalah.","I'm from Sohar. And you?"]],
-   ["Lovely! Are you a student, or do you work?",["I'm a student at the college.","I work in a hotel."]],
-   ["That's great. What do you like doing in your free time?",["I like playing football.","I enjoy reading and swimming."]],
-   ["Nice! What did you do last weekend?",["I visited my family.","I went to the beach with my friends."]],
-   ["That sounds fun. What's your favourite Omani food?",["I love shuwa.","My favourite food is maqbous."]]],
+   ["Are you a student, or do you work?",["I'm a student at the college.","I work in a hotel."]],
+   ["What do you like doing in your free time?",["I like playing football.","I enjoy reading and swimming."]],
+   ["What did you do last weekend?",["I visited my family.","I went to the beach with my friends."]],
+   ["What's your favourite Omani food?",["I love shuwa.","My favourite food is maqbous."]]],
   bye:"It was really nice talking with you, {name}. Let's chat again soon!"},
  {id:'food',t:'Restaurant',s:'Order a meal',r:'the waiter',y:'the customer',topic:'ordering food',ic:'food',c:'#e4553c',
   st:[["Good evening, and welcome to Al Bahar Restaurant! A table for how many people?",["A table for two, please.","Just one, please."]],
    ["Right this way. Here's the menu. What would you like to drink?",["I'd like a fresh lemon and mint juice, please.","Water, please."]],
-   ["Great choice. And what would you like to eat?",["I'd like the grilled kingfish with rice, please.","Could I have the chicken biryani, please?"]],
+   ["And what would you like to eat?",["I'd like the grilled kingfish with rice, please.","Could I have the chicken biryani, please?"]],
    ["Would you like a salad or soup with that?",["A salad, please.","No, thank you."]],
    ["Here you are. Enjoy your meal! Is everything OK?",["Yes, it's delicious, thank you.","Could I have some more bread, please?"]],
    ["Would you like anything else?",["Could I have the bill, please?","No, thanks. Everything was great."]]],
   bye:"Thank you for coming! Have a lovely evening, {name}."},
  {id:'hotel',t:'Hotel',s:'Book a room',r:'the receptionist',y:'the guest',topic:'booking a hotel room',ic:'bed',c:'#2f66a8',
   st:[["Good afternoon, welcome to the Sea View Hotel. How can I help you?",["I'd like to book a room, please.","I have a reservation."]],
-   ["Of course. How many nights would you like to stay?",["Three nights, please.","From Sunday to Wednesday."]],
+   ["How many nights would you like to stay?",["Three nights, please.","From Sunday to Wednesday."]],
    ["Would you like a single room or a double room?",["A double room, please.","A single room with a sea view, please."]],
    ["The double room is 45 rials a night, with breakfast. Is that OK?",["Yes, that's fine.","Do you have anything cheaper?"]],
-   ["Perfect. Could I have your name and phone number, please?",["My name is {nm}. My number is 9123 4567.","Sure. It's 9876 5432."]],
-   ["Thank you. Your room is booked. Do you have any questions?",["What time is check-out?","Is there Wi-Fi in the room?"]]],
-  bye:"You're welcome. Enjoy your stay with us, {name}!"},
+   ["Could I have your name and phone number, please?",["My name is {nm}. My number is 9123 4567.","Sure. It's 9876 5432."]],
+   ["Your room is booked. Do you have any questions?",["What time is check-out?","Is there Wi-Fi in the room?"]]],
+  bye:"Enjoy your stay with us, {name}!"},
  {id:'ticket',t:'Bus tickets',s:'Buy a ticket',r:'the ticket seller',y:'the passenger',topic:'buying a bus ticket',ic:'bus',c:'#7b4a9a',
   st:[["Hello! Welcome to the bus station. Where would you like to go?",["I'd like a ticket to Muscat, please.","One ticket to Nizwa, please."]],
-   ["Sure. When would you like to travel?",["Tomorrow morning, please.","On Thursday afternoon."]],
+   ["When would you like to travel?",["Tomorrow morning, please.","On Thursday afternoon."]],
    ["One way or return?",["A return ticket, please.","One way, please."]],
    ["The bus leaves at 7 a.m. and arrives at 7 p.m. Is that OK?",["Yes, that's perfect.","Is there a later bus?"]],
    ["That's 15 rials, please. How would you like to pay?",["By card, please.","In cash. Here you are."]],
@@ -292,24 +292,24 @@ const SC=[
   bye:"Have a great flight, {name}!"},
  {id:'shop',t:'Clothes shop',s:'Buy something to wear',r:'the shop assistant',y:'the customer',topic:'shopping for clothes',ic:'bag',c:'#c2681a',
   st:[["Hello! Welcome to our shop. Can I help you?",["Yes, please. I'm looking for a jacket.","I'm just looking, thank you."]],
-   ["Sure. What size are you?",["Medium, please.","I think I'm a large."]],
+   ["What size are you?",["Medium, please.","I think I'm a large."]],
    ["And what colour would you like?",["Do you have it in blue?","White, please."]],
-   ["Here you are. The fitting room is over there. How does it fit?",["It's a bit small. Do you have a bigger size?","It fits well, thank you."]],
+   ["The fitting room is over there. How does it fit?",["It's a bit small. Do you have a bigger size?","It fits well, thank you."]],
    ["It's 12 rials. Would you like to pay by cash or card?",["By card, please.","Is there a discount?"]]],
   bye:"Thank you for shopping with us, {name}!"},
  {id:'pharmacy',t:'Pharmacy',s:'Ask for medicine',r:'the pharmacist',y:'the customer',topic:'the pharmacy visit',ic:'pill',c:'#b8405e',
   st:[["Good morning. How can I help you today?",["I have a headache. Do you have something for it?","I have a bad cold."]],
-   ["I'm sorry to hear that. How long have you had it?",["Since yesterday.","For two days."]],
+   ["How long have you had it?",["Since yesterday.","For two days."]],
    ["Are you allergic to any medicine?",["No, I'm not.","Yes, I'm allergic to penicillin."]],
    ["Take one tablet twice a day, after meals. Is that clear?",["Yes, thank you. Twice a day after meals.","Sorry, could you repeat that, please?"]],
    ["That's 3 rials, please. Anything else?",["No, thank you. Here you are.","Do you sell vitamins?"]]],
   bye:"Here you are. I hope you feel better soon, {name}!"},
  {id:'way',t:'Directions',s:'Ask the way',r:'a helpful local',y:'a visitor',topic:'asking for directions',ic:'pin',c:'#3d5a66',
   st:[["Hi there! You look a little lost. Can I help you?",["Yes, please. Where is the museum?","Excuse me, how can I get to the post office?"]],
-   ["Sure! Go straight and take the second street on the left. Is that clear?",["The second street on the left. Got it!","Sorry, could you say that again, please?"]],
-   ["Then it's next to the bank, opposite the park. Are you walking or driving?",["I'm walking.","I'm driving."]],
-   ["It's about ten minutes on foot. Shall I show you on the map?",["Yes, please. That would be great.","No, thanks. I can find it."]]],
-  bye:"No problem! Enjoy your visit, {name}."}
+   ["Go straight and take the second street on the left. Is that clear?",["The second street on the left. Got it!","Sorry, could you say that again, please?"]],
+   ["Then you'll see it on your right, opposite the park. Are you walking or driving?",["I'm walking.","I'm driving."]],
+   ["Shall I show you on the map?",["Yes, please. That would be great.","No, thanks. I can find it."]]],
+  bye:"Enjoy your visit, {name}!"}
 ];
 const LV={Beginner:{rate:.9,g:'beginner (A1 to A2): use very short, simple sentences and common words. Be forgiving and only fix clear mistakes that matter.'},
  Intermediate:{rate:.95,g:'intermediate (B1): use clear everyday sentences and bring in a useful new phrase now and then.'},
@@ -427,16 +427,16 @@ function voiceLabel(){const b=$('#voiceBtn');if(!b)return;const list=tts?VO:bLis
 try{if(window.speechSynthesis)speechSynthesis.onvoiceschanged=voiceLabel}catch(e){}
 const dur=t=>Math.min(9000,Math.max(1200,String(t).split(/\s+/).length*340/LV[S.level].rate));
 let sTok=0,shownVoice=false,unlocked=false;
-function speak(text){return new Promise(res=>{
- const ms=dur(text),tok=++sTok;let done=false;
+function speak(text,slow){return new Promise(res=>{
+ const ms=dur(text)*(slow?1.25:1),tok=++sTok,rate=Math.max(.7,LV[S.level].rate*(slow?.8:1));let done=false;
  const fin=()=>{if(done)return;done=true;if(tok===sTok)talk(false);res()};
  const fake=()=>{talk(true,ms);setTimeout(fin,ms)};
  const go=()=>{
   if(tok!==sTok){fin();return}
   if(!S.sound){fake();return}
-  if(tts){talk(true,ms+4000);const say=(lang,again)=>tts.speak(String(text).slice(0,1900),{voice:VO[vIdx()],rate:LV[S.level].rate,language:lang}).then(fin).catch(e=>{const c=e&&e.code;if(again&&!['not_granted','busy','rate_limited','viewer_stopped'].includes(c)){say('en',false);return}if(c==='not_granted'){tts=null;voiceLabel()}fake()});say(S.accent==='us'?'en-US':'en-GB',true);return}
+  if(tts){talk(true,ms+4000);const say=(lang,again)=>tts.speak(String(text).slice(0,1900),{voice:VO[vIdx()],rate,language:lang}).then(fin).catch(e=>{const c=e&&e.code;if(again&&!['not_granted','busy','rate_limited','viewer_stopped'].includes(c)){say('en',false);return}if(c==='not_granted'){tts=null;voiceLabel()}fake()});say(S.accent==='us'?'en-US':'en-GB',true);return}
   const ss=window.speechSynthesis;
-  if(ss&&window.SpeechSynthesisUtterance){try{ss.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=LV[S.level].rate;const v=bList()[vIdx()];if(v){u.voice=v;u.lang=v.lang}let st=false;u.onstart=()=>{st=true};u.onend=fin;u.onerror=fin;talk(true,ms+4000);ss.speak(u);
+  if(ss&&window.SpeechSynthesisUtterance){try{ss.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=rate;const v=bList()[vIdx()];if(v){u.voice=v;u.lang=v.lang}let st=false;u.onstart=()=>{st=true};u.onend=fin;u.onerror=fin;talk(true,ms+4000);ss.speak(u);
    setTimeout(()=>{if(!st&&!ss.speaking&&!done){noVoice();fake()}},1800);setTimeout(fin,ms*2+6000);return}catch(e){}}
   noVoice();fake();
  };
@@ -578,11 +578,130 @@ function check(text){
 const norm=s=>String(s).toLowerCase().replace(/[’`]/g,"'").replace(/\bi'd\b/g,'i would').replace(/\bi'm\b/g,'i am').replace(/\b(it|that|what|there|here)'s\b/g,'$1 is').replace(/n't\b/g,' not').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 function lev(a,b){let p=Array.from({length:b.length+1},(_,j)=>j);for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[b.length]}
 function near(a,b){a=norm(a);b=norm(b);return a===b||lev(a,b)<=Math.max(1,Math.floor(b.length*.08))}
+/* practice-mode conversation brain: understands answers, answers questions, asks again */
+const cap=x=>String(x).charAt(0).toUpperCase()+String(x).slice(1);
+const LISTS={
+ drink:['lemon and mint juice','lemon mint juice','lemon mint','orange juice','mango juice','apple juice','pineapple juice','juice','sparkling water','water','tea','karak','arabic coffee','coffee','cappuccino','latte','milk','laban','lassi','smoothie','milkshake','cola','pepsi','soft drink','hot chocolate','mocktail','lemonade'],
+ food:['grilled kingfish','kingfish','grilled fish','fish','chicken biryani','vegetable biryani','biryani','grilled chicken','chicken','shuwa','maqbous','majboos','kabsa','mandi','rice','shrimp','prawns','beef','lamb','mutton','burger','pizza','pasta','salad','soup','sandwich','shawarma','falafel','kebab','steak','vegetables','fries','hummus','seafood','halwa','dates','harees','mishkak'],
+ place:['abu dhabi','muscat','salalah','nizwa','sohar','sur','ibri','buraimi','duqm','dubai','doha','riyadh','jeddah','london','cairo','mumbai','istanbul','kuwait','bahrain','mirbat','taqah','seeb','barka','rustaq','bahla','khasab','sharjah','paris','kuala lumpur','bangkok','oman','india','egypt','turkey','jordan','qatar','saudi arabia','the uk','america','yemen','pakistan'],
+ room:['family room','sea view','single','double','twin','suite','king','queen'],
+ size:['extra small','extra large','small','medium','large','xxl','xl'],
+ colour:['black','white','blue','navy','red','green','grey','gray','brown','beige','pink','purple','yellow','orange','gold','silver','maroon'],
+ pay:['credit card','debit card','apple pay','card','visa','cash','phone'],
+ seat:['window','aisle','middle'],
+ symptom:['sore throat','stomach ache','runny nose','back pain','headache','stomachache','toothache','earache','cold','fever','cough','allergy','flu','pain','sneezing'],
+ hobby:['video games','horse riding','football','reading','swimming','cooking','drawing','painting','games','walking','running','camping','fishing','shopping','travelling','traveling','music','basketball','volleyball','cycling','gym','photography','writing','sewing','gardening','driving','tennis','chess','hiking','dancing'],
+ item:['t-shirt','jacket','shirt','abaya','dishdasha','dress','shoes','sandals','scarf','shayla','kumma','trousers','jeans','skirt','hat','cap','bag','watch','gift','perfume','coat','jumper','sweater','socks','belt','wallet','sunglasses'],
+ dest:['post office','bus station','police station','shopping mall','petrol station','train station','museum','bank','hospital','clinic','mall','souq','market','beach','hotel','restaurant','pharmacy','park','supermarket','airport','college','university','school','fort','library','cafe','coffee shop','cinema','stadium','corniche','harbour','port']
+};
+const N2W=['no','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+const W2N={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12};
+const inList=(type,t)=>{const l=' '+t.toLowerCase().replace(/[^a-z' -]/g,' ')+' ';let b=null;for(const x of LISTS[type])if(new RegExp('[^a-z]'+x.replace(/[-]/g,'\\-')+'(s|es)?[^a-z]').test(l)&&(!b||x.length>b.length))b=x;return b};
+function getNum(t){const m=t.match(/\b(\d{1,2})\b/);if(m)return +m[1];const w=t.match(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b/i);if(w)return W2N[w[1].toLowerCase()];if(/\b(just me|only me|myself|alone|me only|for me)\b/i.test(t))return 1;if(/\b(two of us|me and my \w+|my (wife|husband|friend|brother|sister|mother|father|mum|mom|dad) and (me|i))\b/i.test(t))return 2;if(/\b(couple)\b/i.test(t))return 2;return null}
+function getYN(t){const l=t.toLowerCase().replace(/[’‘]/g,"'");if(/\bno problem\b/.test(l)&&!/\b(no|not)\b(?! problem)/.test(l.replace(/no problem/g,'')))return 'yes';if(/\b(no|nope|not|nothing|that's all|that is all|i'm fine|i'm good|don't|didn't|haven't|isn't|aren't|never)\b/.test(l))return 'no';if(/\b(yes|yeah|yep|yup|sure|of course|ok|okay|fine|perfect|great|sounds good|alright|all right|i did|i do|i have|it is|correct|right|got it|clear|understood|good|please|thanks|thank you)\b/.test(l))return 'yes';return null}
+const STOP=/^(something|anything|it|that|this|one|nothing|a|the|to|you|me|some|go|be|have|get|know|please)\b/;
+const cap1=(re,t)=>{const m=t.match(re);if(!m)return null;const x=m[m.length-1].trim().toLowerCase();return STOP.test(x)?null:x};
+const GET={
+ num:t=>getNum(t),
+ yn:t=>getYN(t),
+ any:t=>/[a-z]{2,}/i.test(t)?t:null,
+ end:t=>t||'ok',
+ drink:t=>inList('drink',t)||cap1(/\b(?:drink|have|like|want|get)\s+(?:a |an |some )?([a-z]+(?: [a-z]+)?)(?:,|\.|$| please)/i,t),
+ food:t=>inList('food',t)||cap1(/\b(?:have|like|love|want|eat|try|get|favourite is|favorite is)\s+(?:the |a |an |some )?([a-z]+(?: [a-z]+)?)(?:,|\.|!|$| please| with)/i,t),
+ place:t=>inList('place',t)||cap1(/\b(?:from|to|in)\s+([a-z]+(?: [a-z]+)?)(?:,|\.|!|$| please| and)/i,t),
+ room:t=>inList('room',t),size:t=>inList('size',t)||(/\b(s|m|l)\b/i.test(t)?{s:'small',m:'medium',l:'large'}[t.match(/\b(s|m|l)\b/i)[1].toLowerCase()]:null),
+ colour:t=>inList('colour',t),pay:t=>inList('pay',t),seat:t=>inList('seat',t),symptom:t=>inList('symptom',t)||(/\b(sick|ill|unwell|not well|tired|dizzy)\b/i.test(t)?'feeling unwell':null),
+ hobby:t=>inList('hobby',t)||cap1(/\b(?:like|love|enjoy)\s+([a-z]+ing(?: [a-z]+)?)/i,t),
+ job:t=>/\b(student|study|studying|college|university|school|class)\b/i.test(t)?'student':/\b(work|job|working|engineer|teacher|nurse|doctor|technician|employee|manager|driver|officer|company|business)\b/i.test(t)?'work':/\b(retired|housewife|at home)\b/i.test(t)?'home':null,
+ when:t=>cap1(/\b(today|tonight|tomorrow(?: morning| afternoon| evening| night)?|this (?:morning|afternoon|evening|weekend)|next (?:week|weekend|month|sunday|monday|tuesday|wednesday|thursday|friday|saturday)|(?:on )?(?:sunday|monday|tuesday|wednesday|thursday|friday|saturday)(?: morning| afternoon| evening| night)?|in the (?:morning|afternoon|evening)|at \d{1,2}(?::\d\d)? ?(?:am|pm|a\.m\.|p\.m\.|o'clock)?|\d{1,2} ?(?:am|pm)|as soon as possible|now)\b/i,t),
+ nights:t=>{const f=t.match(/\bfrom (\w+) (?:to|until|till) (\w+)/i);if(f)return `from ${cap(f[1].toLowerCase())} to ${cap(f[2].toLowerCase())}`;const n=getNum(t);if(n!=null){const u=(t.match(/\b(night|day|week)s?\b/i)||[,'night'])[1].toLowerCase();return `${n} ${u}${n>1?'s':''}`}if(/\b(a|one) week\b/i.test(t))return 'one week';if(/\b(tonight|one night|a night)\b/i.test(t))return 'one night';return null},
+ dur:t=>cap1(/\b(since (?:yesterday|this morning|last night|last week|\w+day)|for (?:a |one |two |three |four |five |\d+ )?(?:few )?(?:days?|weeks?|hours?)|(?:one|two|three|four|five|\d+|a few) (?:days?|weeks?|hours?)|yesterday|this morning|today|last night|a week|a long time)\b/i,t),
+ phone:t=>/\d{3,}|\bmy name\b|\bname is\b|\bi'?m [a-z]+/i.test(t)?'ok':null,
+ bags:t=>/\b(no bags?|none|nothing|only hand|hand luggage|carry[- ]on)\b/i.test(t)?0:(getNum(t)!=null?getNum(t):/\b(a|one) (bag|suitcase)\b|\bjust a\b/i.test(t)?1:null),
+ look:t=>/\b(just|only) (looking|browsing)\b/i.test(t)?'just':inList('item',t)||cap1(/\blooking for (?:a |an |some )?([a-z]+(?: [a-z]+)?)(?:,|\.|$| please)/i,t),
+ fit:t=>/\b(small|tight|short)\b/i.test(t)?'small':/\b(big|large|loose|long)\b/i.test(t)?'big':/\b(fits|fit|good|great|perfect|fine|nice|like it|love it|ok|okay)\b/i.test(t)?'good':null,
+ dest:t=>inList('dest',t)||cap1(/\b(?:where is|where's|get to|go to|looking for|find)\s+(?:the |a )?([a-z]+(?: [a-z]+)?)(?:,|\.|\?|$| please)/i,t)
+};
+function slotOf(st,t){if(st.k&&st.k.test(t))return 'k';if(st.t==='choice'){const l=t.toLowerCase();for(const o of st.o)if(new RegExp('\\b'+o+'\\b').test(l))return o;return getYN(t)==='no'?'no':null}if(st.t==='intent'){for(const [re,v] of st.o)if(re.test(t))return v;return null}return (GET[st.t]||GET.any)(t)}
+const G={repeat:/\b(repeat|say (it|that) again|pardon|didn'?t (understand|get|catch)|don'?t understand|do not understand|what do you mean|more slowly|slowly|slower)\b|^\s*(what|sorry|huh|pardon|excuse me)\s*\??\s*$/i,
+ dunno:/\b(i don'?t know|i do not know|not sure|no idea|help me|what can i say|what should i say|i can'?t)\b|^\s*help\b/i,
+ hello:/^\s*(hi|hello|hey|salam|assalamu|good (morning|afternoon|evening))\b[\s,!.]*$/i,
+ how:/\bhow are you\b/i,who:/\b(what'?s your name|what is your name|who are you)\b/i,
+ ask:/\?\s*$|^\s*(what|where|when|why|how|which|who|can|could|do|does|is|are|will|would|may|should)\b/i};
+const FAQ={
+ greet:[[/\b(and you|where are you from|where do you live)\b/i,"I'm from Salalah, by the sea!"],[/\bhow old\b/i,"I'm a young English friend, just a few months old!"],[/\b(what do you do|your job|do you work)\b/i,"I help people practise English. It's my favourite job!"],[/\b(your hobby|hobbies|what do you like)\b/i,"I love chatting and learning new words!"],[/\b(your favou?rite food)\b/i,"I love shuwa!"]],
+ food:[[/\b(recommend|suggest|special|popular|best)\b/i,"Our grilled kingfish is very popular today!"],[/\bmenu\b/i,"We have grilled fish, chicken biryani, shuwa, salads and fresh juices."],[/\bspicy|hot\b/i,"It's a little spicy, but the chef can make it mild for you."],[/\b(vegetarian|vegetables|vegan)\b/i,"Yes, we have vegetable biryani and fresh salads."],[/\b(how much|price|cost)\b/i,"Most main dishes are 3 to 5 rials."],[/\b(toilet|bathroom|washroom)\b/i,"The washroom is at the back, on the right."],[/\bwi-?fi|wifi\b/i,"Yes, the Wi-Fi password is on your table."],[/\b(window|outside|terrace|sea)\b/i,"Of course, I'll find you a table by the sea."],[/\b(open|close|closing)\b/i,"We're open until midnight."],[/\b(card|cash|pay)\b/i,"You can pay by card or in cash."],[/\bhow long\b/i,"Your food will be ready in about fifteen minutes."]],
+ hotel:[[/\bcheck[- ]?out\b/i,"Check-out is at 12 noon."],[/\bcheck[- ]?in\b/i,"Check-in is from 2 p.m."],[/\bwi-?fi|wifi|internet\b/i,"Yes, Wi-Fi is free in all rooms."],[/\bbreakfast\b/i,"Breakfast is from 7 to 10 in the restaurant."],[/\b(pool|swim)\b/i,"Yes, the pool is open from 8 a.m. to 8 p.m."],[/\bpark(ing)?\b/i,"Yes, parking is free for guests."],[/\b(airport|taxi)\b/i,"We can book a taxi to the airport for you."],[/\bgym\b/i,"Yes, the gym is on the first floor."],[/\b(how much|price|cost)\b/i,"A double room is 45 rials a night, with breakfast."],[/\bsea view\b/i,"Yes, our double rooms have a sea view."],[/\brestaurant|dinner|lunch\b/i,"Our restaurant is on the ground floor."]],
+ ticket:[[/\b(platform|gate|where does|leave from|which bus)\b/i,"It leaves from Gate 3, just over there."],[/\b(bag|luggage|suitcase)\b/i,"Yes, you can take one big bag and one small bag."],[/\bwi-?fi|wifi\b/i,"Yes, there's free Wi-Fi on the bus."],[/\b(stop|break|rest)\b/i,"The bus stops for a short break on the way."],[/\b(toilet|bathroom)\b/i,"Yes, there's a toilet on the bus."],[/\b(how long|hours|arrive)\b/i,"The trip takes about twelve hours."],[/\b(how much|price|cost)\b/i,"A return ticket is 15 rials."],[/\bstudent\b/i,"Yes, students get 20% off with a student card."]],
+ airport:[[/\bgate\b/i,"Gate 5 is upstairs, on the left."],[/\b(delay|on time|late)\b/i,"The flight is on time today."],[/\b(boarding|what time)\b/i,"Boarding starts at 9:30."],[/\b(meal|food|eat)\b/i,"Yes, a meal is served on the flight."],[/\b(kilo|weight|heavy|how much can)\b/i,"You can check in 30 kilos."],[/\b(lounge|duty free|shop)\b/i,"The duty-free shops are after passport control."],[/\b(how long|hours|arrive)\b/i,"The flight takes about two hours."]],
+ shop:[[/\b(how much|price|cost)\b/i,"It's 12 rials."],[/\b(discount|sale|offer|cheaper)\b/i,"Today everything is 10% off!"],[/\b(other colou?rs?|what colou?rs?)\b/i,"We have it in black, white, blue and grey."],[/\b(return|exchange|refund)\b/i,"You can exchange it within 7 days with the receipt."],[/\b(fitting room|try it|try on)\b/i,"Of course! The fitting room is over there, on the left."],[/\b(bigger|larger)\b/i,"Yes, let me bring you a bigger size."],[/\bsmaller\b/i,"Yes, let me bring you a smaller size."]],
+ pharmacy:[[/\b(side effects?|sleepy)\b/i,"It may make you a little sleepy."],[/\b(food|meal|eat)\b/i,"Take it after meals."],[/\b(child|children|kids?|son|daughter)\b/i,"For children, please ask the doctor first."],[/\b(how many|how often|how much should)\b/i,"One tablet, twice a day."],[/\b(how much|price|cost)\b/i,"It's 3 rials."],[/\bdoctor\b/i,"If you don't feel better in three days, please see a doctor."],[/\bvitamins?\b/i,"Yes, the vitamins are on the left shelf."]],
+ way:[[/\b(how far|far|how long)\b/i,"It's not far, about ten minutes on foot."],[/\btaxi\b/i,"You can get a taxi on the main road."],[/\bbus\b/i,"Bus number 2 stops just over there."],[/\b(open|close|what time)\b/i,"It's open from 9 a.m. to 5 p.m."],[/\b(ticket|entry|how much|price)\b/i,"Entry is 1 rial."]]};
+const EX={
+ greet:[{t:'place',a:v=>`${cap(v)}! That's a lovely place.`,r:"Where are you from? For example: I'm from Salalah."},
+  {t:'job',a:v=>v==='student'?"A student, how nice!":v==='work'?"Oh, you work! That's great.":"That's lovely.",r:"Are you a student, or do you have a job? For example: I'm a student."},
+  {t:'hobby',a:v=>`${cap(v)}? That sounds fun!`,r:"What do you like doing in your free time? For example: I like playing football."},
+  {t:'any',a:(v,t)=>/beach|sea/i.test(t)?"The beach is lovely in Oman!":/family|mother|father|grand|cousin|brother|sister|mum|dad/i.test(t)?"Family time is the best.":/home|rest|sleep|nothing|relax/i.test(t)?"A quiet weekend is nice too.":/friend/i.test(t)?"Time with friends is always fun.":"That sounds nice!",r:"What did you do last weekend? For example: I visited my family."},
+  {t:'food',a:v=>`Mmm, ${v}! I love it too.`,r:"What's your favourite Omani food? For example: I love shuwa."}],
+ food:[{t:'num',a:v=>v===1?"A table for one, of course.":`A table for ${N2W[v]||v}, no problem.`,r:"How many people is the table for? For example: A table for two, please."},
+  {t:'drink',a:v=>/^(water|tea|coffee|karak|milk)$/.test(v)?`${cap(v)}, of course.`:`One ${v}, great choice.`,r:"What would you like to drink? We have juice, tea, karak, coffee and water."},
+  {t:'food',a:v=>`The ${v}, lovely.`,r:"What would you like to eat? We have grilled fish, chicken biryani, shuwa and salads."},
+  {t:'choice',o:['salad','soup','both'],a:v=>v==='no'?"No problem.":v==='both'?"Salad and soup, of course.":`A ${v}, of course.`,r:"Would you like a salad or soup with your meal?"},
+  {t:'yn',k:/\b(bread|water|more)\b/i,a:(v,t)=>/bread/i.test(t)?"Of course, I'll bring more bread.":v==='k'?"Of course, I'll bring it right away.":v==='no'?"Oh, I'm sorry! I'll tell the chef right away.":"I'm so glad you like it!",r:"Is everything OK with your meal?"},
+  {t:'end',a:(v,t)=>/\b(bill|check)\b/i.test(t)?"Of course. Here's your bill. That's 9 rials.":/\b(dessert|sweet|cake)\b/i.test(t)?"Our date cake is delicious! I'll bring it for you.":"Okay!"}],
+ hotel:[{t:'intent',o:[[/\b(reservation|booked|booking|check in|check-in)\b/i,'res'],[/\b(book|reserve|room|stay|available|night)\b/i,'book']],a:v=>v==='res'?"Of course. Let me find your booking.":"I'd be happy to help.",r:"How can I help you? For example: I'd like to book a room, please."},
+  {t:'nights',a:v=>`${cap(v)}, no problem.`,r:"How many nights would you like to stay? For example: Three nights, please."},
+  {t:'room',a:v=>`A ${v} room, good choice.`,r:"Would you like a single room or a double room?"},
+  {t:'yn',k:/\b(cheap|cheaper|discount|less|lower|expensive)\b/i,a:v=>v==='yes'?"Great.":"I can give you a special price: 40 rials a night.",r:"The room is 45 rials a night, with breakfast. Is that OK for you?"},
+  {t:'phone',a:()=>"Thank you, I've got that.",r:"Could you tell me your name and your phone number, please?"},
+  {t:'end',a:()=>"Okay!"}],
+ ticket:[{t:'place',a:v=>`${cap(v)}, great.`,r:"Where would you like to go? For example: A ticket to Muscat, please."},
+  {t:'when',a:v=>`${cap(v)}, let me check.`,r:"When would you like to travel? For example: Tomorrow morning."},
+  {t:'choice',o:['one way','one-way','return','round trip'],a:v=>v==='no'?"Okay.":`${cap(v==='round trip'?'return':v)}, okay.`,r:"Would you like a one-way ticket or a return ticket?"},
+  {t:'yn',k:/\b(later|earlier|another|other|afternoon|evening|night)\b/i,a:v=>v==='yes'?"Perfect.":"There's another bus at 2 p.m. I'll book that one for you.",r:"The bus leaves at 7 a.m. Is that time OK for you?"},
+  {t:'pay',k:/\b(discount|student)\b/i,a:v=>v==='k'?"Students get 20% off, so that's 12 rials.":/cash/.test(v)?"Cash is fine, thank you.":`By ${v}, no problem. Please tap here.`,r:"How would you like to pay, by card or in cash?"},
+  {t:'end',a:()=>"Okay!"}],
+ airport:[{t:'any',a:()=>"Thank you.",r:"May I see your passport and ticket, please? You can say: Here you are."},
+  {t:'place',a:v=>`${cap(v)}, lovely.`,r:"Where are you flying to today? For example: I'm flying to Muscat."},
+  {t:'bags',a:v=>v===0?"No bags, okay.":`${cap(N2W[v]||v)} bag${v>1?'s':''}, okay. Please put ${v>1?'them':'it'} on the belt.`,r:"How many bags are you checking in? For example: Just one bag."},
+  {t:'yn',a:v=>v==='no'?"Please make sure you know everything inside your bags.":"Thank you.",r:"Did you pack your bags yourself? You can say: Yes, I did."},
+  {t:'seat',a:v=>`A ${v} seat, no problem.`,r:"Would you like a window seat or an aisle seat?"},
+  {t:'end',a:()=>"Okay!"}],
+ shop:[{t:'look',a:v=>v==='just'?"No problem, take your time!":`A ${v}? Sure, we have lots of nice ones.`,r:"Can I help you? For example: I'm looking for a jacket."},
+  {t:'size',a:v=>`${cap(v)}, okay.`,r:"What size are you? Small, medium or large?"},
+  {t:'colour',a:v=>`${cap(v)}, good choice. Here you are.`,r:"What colour would you like? We have black, white, blue and grey."},
+  {t:'fit',a:v=>v==='small'?"Let me get you a bigger size.":v==='big'?"Let me get you a smaller size.":"It looks great on you!",r:"How does it fit? Is it too small, too big, or just right?"},
+  {t:'pay',k:/\b(discount|cheaper|sale|offer)\b/i,a:v=>v==='k'?"Today there's 10% off, so it's 10 rials 800 baisa.":/cash/.test(v)?"Cash is fine, thank you.":`By ${v}, no problem.`,r:"Would you like to pay by cash or card?"}],
+ pharmacy:[{t:'symptom',a:v=>`Oh, ${/^(cold|fever|cough|headache|sore throat|stomach ache|stomachache|toothache|earache|runny nose)$/.test(v)?'a '+v:'I see, '+v}. I'm sorry to hear that.`,r:"How can I help you? Tell me how you feel. For example: I have a headache."},
+  {t:'dur',a:v=>`${cap(v)}, I see.`,r:"How long have you had it? For example: Since yesterday."},
+  {t:'yn',k:/allergic to/i,a:(v,t)=>{const m=t.match(/allergic to ([a-z]+)/i);return m?`Okay, this medicine has no ${m[1].toLowerCase()}, so it's safe for you.`:v==='no'?"Good.":"Okay, I'll choose a safe one for you."},r:"Are you allergic to any medicine? You can say: No, I'm not."},
+  {t:'yn',a:v=>v==='no'?"No problem. One tablet, two times a day, after you eat.":"Great.",r:"Take one tablet twice a day, after meals. Is that clear?"},
+  {t:'end',a:()=>"Okay!"}],
+ way:[{t:'dest',a:v=>`The ${v}? Sure, it's easy to find.`,r:"Where would you like to go? For example: Where is the museum?"},
+  {t:'yn',a:v=>v==='no'?"No problem: walk straight, then turn left at the second street.":"Great.",r:"Go straight and take the second street on the left. Is that clear?"},
+  {t:'choice',o:['walking','driving','walk','drive','car','foot','taxi'],a:v=>/walk|foot/.test(v)?"It's about ten minutes on foot.":v==='no'?"Okay.":"It's about three minutes by car, and there's parking outside.",r:"Are you walking or driving?"},
+  {t:'yn',a:v=>v==='no'?"Okay!":"Look, we're here, and it's just there.",r:"Shall I show you on the map?"}]
+};
 function localTurn(text){
- const s=scn(),i=Math.min(S.turn,s.st.length-1);
- if(/[؀-ۿ]/.test(text))return{kind:'fix',better:'',tip:"Let's answer in English. Tap an idea below if you need help.",praise:`Good try, ${nm()}!`,reply:fx(s.st[i][0]),hints:s.st[i][1].map(fx),done:false,stay:true};
- const c=check(text),nx=s.st[i+1];
- return{kind:c?c.kind:'great',better:c?c.better:'',tip:c?c.tip:'',praise:'',reply:fx(nx?nx[0]:s.bye),hints:nx?nx[1].map(fx):[],done:!nx};
+ const s=scn(),n=s.st.length,i=Math.min(S.turn,n-1),st=(EX[s.id]||[])[i]||{t:'any',a:()=>''},q=fx(s.st[i][0]),hn=s.st[i][1].map(fx);
+ const t=String(text).replace(/[’‘]/g,"'").trim();
+ if(/[\u0600-\u06FF]/.test(t))return{kind:'fix',better:'',tip:"Let's answer in English. Tap an idea below if you need help.",praise:`Good try, ${nm()}!`,reply:q,hints:hn,stay:true};
+ const c=check(t),fb=c?{kind:c.kind,better:c.better,tip:c.tip}:{kind:'great',better:'',tip:''};
+ const meta=o=>Object.assign(c?fb:{kind:'none',better:'',tip:''},{hints:hn,stay:true},o);
+ if(G.repeat.test(t))return meta({reply:`Of course! I'll say it again, slowly. ${st.r||q}`,slow:true});
+ if(G.dunno.test(t))return meta({reply:`That's okay, ${nm()}! You could say: "${hn[0]}"`});
+ let v=slotOf(st,t);const small=G.hello.test(t)||G.how.test(t)||G.who.test(t);
+ if(small&&(v==null||st.t==='any'||st.t==='end')){v=null;const lead=G.how.test(t)?"I'm very well, thank you for asking!":G.who.test(t)?`I'm ${BOT[S.av]}, your English friend.`:`Hello again, ${nm()}!`;return Object.assign(c?fb:{kind:'none',better:'',tip:''},{reply:`${lead} ${st.r||q}`,hints:hn,stay:true})}
+ let ans='';if(G.ask.test(t)&&v!=='k')for(const [re,a] of FAQ[s.id]||[])if(re.test(t)){ans=a;break}
+ if(v!=null||S.miss>=2){
+  let ack=v!=null?(st.a?st.a(v,t):''):"No problem, let's carry on.";if(st.t==='end'&&ans)ack='';S.miss=0;
+  const nx=s.st[i+1];
+  return Object.assign(fb,{reply:[ans,ack,fx(nx?nx[0]:s.bye)].filter(Boolean).join(' '),hints:nx?nx[1].map(fx):[],done:!nx});
+ }
+ if(ans)return Object.assign(fb,{reply:`${ans} ${st.r||q}`,hints:hn,stay:true});
+ S.miss=(S.miss||0)+1;
+ if(G.ask.test(t))return Object.assign(fb,{reply:`Good question! I'm not sure about that, but I can check for you later. ${st.r||q}`,hints:hn,stay:true});
+ return Object.assign(c?fb:{kind:'none',better:'',tip:''},{reply:`Sorry, I didn't quite understand. ${st.r||q}`,hints:hn,stay:true});
 }
 
 /* ---------- AI turn (live chat) ---------- */
@@ -600,7 +719,8 @@ Rules:
 - Stay in the role-play and use simple, natural, everyday English. Your "reply" is 1 or 2 short sentences (under 30 words) and ends with a question or a clear prompt, unless the situation is finished. Places are in Oman and prices are in Omani rials.
 - Tone: warm, calm, kind, patient and motivating, like a teacher who really enjoys helping this learner.
 - Strict content rules: never mention or discuss religion, romance, dating, boyfriends or girlfriends, anything sexual, alcohol, pork, gambling, drugs or politics, or anything against Islamic values or Omani culture. All food and drinks are halal (for example tea, karak, coffee, juice, chicken, fish, rice). If the learner brings up any of these, do not discuss it; kindly steer back to the situation.
-- If the learner asks what a word means or asks for help, explain very simply in the reply, then continue.
+- Really respond to what the learner just said before moving on: react to their answer and repeat back the key detail ("A table for three, of course."), answer any question they ask in a helpful, realistic way, and if their answer is unclear or does not fit, kindly ask again with an example instead of moving on. Only go to the next step when the current one is answered.
+- If the learner asks what a word means, asks you to repeat, or asks for help, explain very simply in the reply, then continue.
 - Check only the learner's LAST message for spelling, grammar and word choice. Always correct spelling mistakes, even small typos, and name the corrected words in "tip" (for example: Spelling: "restaurant"). Also correct a lowercase "i". Ignore only a missing full stop at the end and a missing capital at the very start. Short natural answers like "Two, please." are fine.
   kind "great" = correct and natural. kind "upgrade" = correct but there is a more natural or polite way. kind "fix" = a real grammar or vocabulary mistake. If the learner wrote in Arabic or another language, use "fix" and put the English sentence in "better".
 - "better": the learner's sentence corrected, keeping their meaning; "" when kind is "great". "tip": one short, friendly reason (under 14 words); "" when kind is "great".
@@ -657,7 +777,7 @@ function renderAll(){
 const push=e=>S.log.push(e);
 
 /* ---------- game flow ---------- */
-function startScene(i){const s=SC[i];Object.assign(S,{sc:s.id,log:[],turn:0,round:0,streak:0,phr:[],over:false,retry:null});busy=false;show('chat');drawStage();
+function startScene(i){const s=SC[i];Object.assign(S,{sc:s.id,log:[],turn:0,round:0,streak:0,phr:[],over:false,retry:null,miss:0});busy=false;show('chat');drawStage();
  const q=fx(s.st[0][0]);S.hints=s.st[0][1].map(fx);nudged=false;push({t:'bot',x:q});renderAll();speak(q).then(afterSpeak)}
 async function send(raw){
  const text=String(raw||'').trim().slice(0,300);if(!text||busy||S.over)return;
@@ -672,9 +792,8 @@ async function send(raw){
  busy=false;thinking(false);apply(r);
 }
 function apply(r){
- const pts=r.kind==='great'?3:r.kind==='upgrade'?2:1,pr=r.praise||pick(PR[r.kind]);
- S.streak=r.kind==='great'?S.streak+1:0;S.stars+=pts;S.round+=pts;
- push({t:'fb',k:r.kind,b:r.better||'',tip:r.tip||'',pr,p:pts});
+ const none=r.kind==='none',pts=none?0:r.kind==='great'?3:r.kind==='upgrade'?2:1,pr=none?'':(r.praise||pick(PR[r.kind]));
+ if(!none){S.streak=r.kind==='great'?S.streak+1:0;S.stars+=pts;S.round+=pts;push({t:'fb',k:r.kind,b:r.better||'',tip:r.tip||'',pr,p:pts})}
  if(S.streak>=3&&S.streak%3===0)push({t:'note',x:`${S.streak} great answers in a row!`});
  if(r.better&&!S.phr.includes(r.better))S.phr.push(r.better);
  if(!r.stay)S.turn++;
@@ -684,7 +803,7 @@ function apply(r){
  S.hints=r.hints&&r.hints.length?r.hints:(r.done?[]:st[1].map(fx));
  if(r.done){S.over=true;if(!S.done.includes(S.sc))S.done.push(S.sc);S.stars+=5;S.round+=5}
  renderAll();save();
- const say=(r.kind!=='great'&&r.better?`${pr} We can say: ${r.better} `:`${pr} `)+r.reply;speak(say).then(()=>{if(!r.done)afterSpeak()});
+ const say=(!none&&r.kind!=='great'&&r.better?`${pr} We can say: ${r.better} `:pr?`${pr} `:'')+r.reply;speak(say,r.slow).then(()=>{if(!r.done)afterSpeak()});
  if(r.done)setTimeout(showWin,Math.min(dur(say)+900,9500));
 }
 function showWin(){if(S.screen!=='chat'||!S.over)return;const s=scn();$('#wT').textContent=`Well done, ${nm()}!`;$('#wP').textContent=`You finished “${s.t}” and earned ${S.round} stars, including a 5-star bonus.`;
