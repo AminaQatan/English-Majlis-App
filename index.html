@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Majlis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday learning game: warm, calm, encouraging
+   IDEA a Salalah seaside majlis where an Omani friend chats with you
+   PICTURE a soft 3D cartoon Omani friend (abaya and shayla, or dishdasha with kumma or massar) before sea, palms and a fort
+   COLOUR deep sea-teal ground, white paper panels, coral accent, sand
+   TYPE Baloo 2 for titles + Nunito for text
+   LAYOUT laptop: character stage left, chat right; phone: character band on top, chat below, input at the bottom */
+:root{color-scheme:light dark;--sea:#0d4a55;--sea2:#083942;--sand:#f2dcb3;--coral:#e4553c;--coral2:#b9412b;--teal:#0d8487;--paper:#fff;--ink:#17252b;--mut:#56676d;--line:#dbe5e4;--soft:#eef4f3;--botb:#e6f3f2;--meb:#fde2d4;--okb:#dcf3ee;--okt:#0b6363;--fixb:#fff0e7;--upb:#fbf0d8;--upt:#7a5a12}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark;--paper:#0f2c32;--ink:#e9f2f0;--mut:#a3bbbe;--line:#25484f;--soft:#0b2328;--botb:#163c43;--meb:#5a2d23;--okb:#123f3d;--okt:#9fe3da;--fixb:#44251b;--upb:#3a321e;--upt:#ecd28f;--teal:#3fc1bd}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#0f2c32;--ink:#e9f2f0;--mut:#a3bbbe;--line:#25484f;--soft:#0b2328;--botb:#163c43;--meb:#5a2d23;--okb:#123f3d;--okt:#9fe3da;--fixb:#44251b;--upb:#3a321e;--upt:#ecd28f;--teal:#3fc1bd}}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%;margin:0}
+body{background:var(--sea);color:#f4fbfa;font:16px/1.5 Nunito,system-ui,sans-serif;overflow:hidden}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sand);outline-offset:2px}
+[hidden]{display:none!important}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+svg.i.fill{fill:currentColor;stroke:none}
+#app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px max(16px,4vw);background:var(--sea2)}
+.brand{display:flex;align-items:center;gap:9px;font:800 21px/1 'Baloo 2',system-ui,sans-serif}
+.brand svg{width:32px;height:32px;flex:none}
+.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tools{display:flex;align-items:center;gap:6px;flex:none}
+.pill{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.1);font-weight:800;white-space:nowrap}
+.pill .i{color:#ffc94a}
+.ib{width:44px;height:44px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(255,255,255,.1);flex:none}
+.ib:hover{background:rgba(255,255,255,.2)}
+main{position:relative;min-height:0}
+.screen{height:100%}
+.scroll-y{overflow-y:auto}
+.wrap{max-width:1080px;margin:0 auto;padding:16px max(16px,4vw) 28px}
+h1{font:800 clamp(30px,4.6vw,46px)/1.05 'Baloo 2',system-ui,sans-serif;letter-spacing:-.02em;margin:6px 0;text-wrap:balance}
+.lead{margin:0 0 16px;color:#cfe6e4;max-width:62ch}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.av{padding:0;border:3px solid transparent;border-radius:24px;overflow:hidden;background:var(--paper);color:var(--ink);text-align:left;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+.av[aria-pressed=true]{border-color:var(--coral);transform:translateY(-3px)}
+.pic{position:relative;aspect-ratio:5/4;overflow:hidden;background:#ffd9ad}
+.pic>svg:first-child,.bg>svg{position:absolute;inset:0;width:100%;height:100%}
+.robot{position:absolute;bottom:0;left:50%;height:92%;width:auto;aspect-ratio:240/260;transform:translateX(-50%);overflow:visible}
+.cap{padding:10px 14px 14px;display:grid;gap:2px}
+.cap b{font:800 22px/1.1 'Baloo 2',system-ui,sans-serif}
+.cap span{font-size:14px;color:var(--mut)}
+.cap .hi{font-size:15px;color:var(--teal);font-weight:700}
+.setup{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px 18px;align-items:end;background:var(--paper);color:var(--ink);border-radius:22px;padding:18px}
+.fld{display:grid;gap:6px}
+.fld>span{font-weight:700;font-size:14px;color:var(--mut)}
+input{font-size:16px;height:48px;padding:0 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--soft);width:100%}
+input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 30%,transparent)}
+.seg{display:flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:14px;background:var(--soft)}
+.seg button{flex:1 1 auto;min-height:40px;padding:0 10px;border:0;border-radius:10px;background:transparent;font-weight:700;font-size:15px;white-space:nowrap}
+.seg button[aria-pressed=true]{background:var(--sea);color:#fff}
+.go{min-height:52px;padding:0 24px;border:0;border-radius:16px;background:var(--coral);color:#fff;font:800 19px/1 'Baloo 2',system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 0 var(--coral2)}
+.go:active{transform:translateY(2px);box-shadow:0 2px 0 var(--coral2)}
+.credit{margin:22px 0 0;font-size:14px;color:#b8d6d3}
+.greet{display:flex;align-items:center;gap:14px;margin:4px 0 18px}
+.head{width:84px;height:84px;flex:none;border-radius:50%;background:#ffd9ad;overflow:hidden;position:relative}
+.head .robot{inset:0;height:100%;width:100%;transform:none;aspect-ratio:auto}
+.say{background:var(--paper);color:var(--ink);padding:12px 16px;border-radius:18px 18px 18px 6px;font-weight:700;font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,160px),1fr));gap:12px}
+.sc{position:relative;border:0;border-radius:20px;background:var(--paper);color:var(--ink);padding:14px;text-align:left;display:grid;gap:4px;align-content:start;transition:transform .15s}
+.sc:hover{transform:translateY(-2px)}
+.sc i{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;color:#fff;margin-bottom:6px}
+.sc i .i{width:26px;height:26px;stroke-width:1.9}
+.sc b{font:800 19px/1.1 'Baloo 2',system-ui,sans-serif}
+.sc small{font-size:14px;color:var(--mut)}
+.sc .ok{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center}
+.sc .ok .i{width:15px;height:15px;stroke-width:3}
+.chat{display:grid;grid-template-rows:minmax(170px,36%) minmax(0,1fr)}
+.stage{position:relative;overflow:hidden;background:#ffd9ad}
+.stage .robot{height:min(94%,560px)}
+.role{position:absolute;left:12px;top:12px;max-width:calc(100% - 24px);background:rgba(8,40,46,.86);color:#fff;padding:6px 12px;border-radius:999px;font-size:14px;font-weight:700}
+.panel{position:relative;margin-top:-18px;border-radius:22px 22px 0 0;background:var(--paper);color:var(--ink);display:grid;grid-template-rows:auto minmax(0,1fr) auto auto auto;min-height:0;overflow:hidden}
+.ptop{display:flex;align-items:center;gap:8px;padding:8px 12px 8px 6px;border-bottom:1px solid var(--line)}
+.ptop .ib{background:transparent;color:var(--ink)}
+.pt{flex:1;display:grid;gap:5px}
+.pt b{font:800 18px/1.1 'Baloo 2',system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dots{display:flex;gap:4px}
+.dots i{width:16px;height:6px;border-radius:3px;background:var(--line)}
+.dots i.on{background:var(--teal)}
+.mode{font-size:13px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--okb);color:var(--okt);white-space:nowrap}
+.mode.off{background:var(--upb);color:var(--upt)}
+.tb{min-height:40px;padding:0 12px;border-radius:12px;border:1.5px solid var(--line);background:transparent;font-weight:700;font-size:14px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.log{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.m{max-width:min(86%,560px);padding:9px 14px;border-radius:18px;font-size:16.5px;line-height:1.45}
+.m.bot{align-self:flex-start;background:var(--botb);border-bottom-left-radius:6px}
+.who{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:800;color:var(--teal)}
+.who button{border:0;background:transparent;width:32px;height:32px;display:grid;place-items:center;color:var(--teal);border-radius:50%;margin:-6px 0}
+.who .i{width:18px;height:18px}
+.m.me{align-self:flex-end;background:var(--meb);border-bottom-right-radius:6px}
+.fb{align-self:flex-end;max-width:min(92%,560px);border-radius:16px;padding:10px 14px;font-size:15px}
+.fb.great{background:var(--okb);color:var(--okt);font-weight:800;display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px}
+.fb.great .i{color:#f0a91a}
+.fb.fix{background:var(--fixb);border:1.5px solid color-mix(in srgb,var(--coral) 55%,transparent)}
+.fb.upgrade{background:var(--upb);border:1.5px solid color-mix(in srgb,#d9a441 60%,transparent)}
+.fb h4{margin:0 0 4px;font:800 16px/1.2 'Baloo 2',system-ui,sans-serif;display:flex;align-items:center;gap:6px}
+.fb h4 small{margin-left:auto;font:800 13px Nunito,sans-serif;color:var(--mut);white-space:nowrap}
+.fb .lb{font-size:13px;font-weight:700;color:var(--mut)}
+.fb .bt{font-weight:800;font-size:16.5px}
+.fb .tip{color:var(--mut);margin-top:2px}
+.fb .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.note{align-self:center;font-size:14px;font-weight:800;color:var(--teal);text-align:center}
+.typing span{display:inline-block;width:8px;height:8px;margin:4px 2px;border-radius:50%;background:var(--teal);animation:dot 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+.retry{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 12px 8px;padding:8px 12px;border-radius:14px;background:var(--upb);font-size:15px}
+.hints{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:2px 12px 8px;scrollbar-width:none}
+.hints span{font-size:13px;font-weight:700;color:var(--mut);flex:none}
+.hints button{flex:none;min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid color-mix(in srgb,var(--teal) 60%,transparent);background:transparent;color:var(--teal);font-weight:700;font-size:15px;white-space:nowrap}
+.ask{display:flex;gap:8px;padding:8px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.ask input{flex:1;border-radius:999px}
+.ask .ib{background:var(--soft);color:var(--ink);width:48px;height:48px}
+.ask .send{background:var(--coral);color:#fff}
+.mic.on,.mic.wait{background:var(--coral);color:#fff;animation:pulse 1.2s infinite}
+.ask input.lis{border-color:var(--coral)}
+.tipbox{align-self:stretch;display:flex;gap:10px;align-items:flex-start;background:var(--upb);color:var(--ink);border-radius:14px;padding:10px 12px;font-size:14.5px;line-height:1.45}
+.tipbox .i{color:var(--upt);margin-top:1px}
+.win{position:fixed;inset:0;background:rgba(5,28,33,.72);display:grid;place-items:center;padding:16px;z-index:9}
+.wcard{width:min(100%,480px);max-height:100%;overflow:auto;background:var(--paper);color:var(--ink);border-radius:24px;padding:22px}
+.wcard>svg{width:110px;height:84px;display:block;margin:0 auto}
+.wcard h2{font:800 30px/1.1 'Baloo 2',system-ui,sans-serif;margin:6px 0 4px;text-align:center}
+.wcard p{text-align:center;margin:0 0 14px;color:var(--mut)}
+.wcard h3{font:800 17px/1.2 'Baloo 2',system-ui,sans-serif;margin:0 0 8px}
+.wcard ul{margin:0 0 16px;padding:0;list-style:none;display:grid;gap:6px}
+.wcard li{padding:8px 12px;border-radius:12px;background:var(--botb);font-weight:700}
+.wcard li small{display:block;font-size:13px;color:var(--coral);font-weight:800}
+.wb{display:grid;gap:8px}
+.robot .bob{animation:bob 3.4s ease-in-out infinite}
+.robot .gaze{transition:transform .3s ease-out}
+.robot .blink,.robot .mouth{transform-box:fill-box;transform-origin:center}
+.robot .mouth{transform-origin:50% 0}
+.robot .blink{transition:transform .08s}
+.robot.blinking .blink{transform:scaleY(.12)}
+.robot.talking .mouth{animation:talk .24s ease-in-out infinite alternate}
+.robot.thinking .gaze{transform:translate(3px,-3px)!important}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes talk{from{transform:scaleY(.55)}to{transform:scaleY(1.45)}}
+@keyframes dot{50%{opacity:.25;transform:translateY(-3px)}}
+@keyframes pulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--coral) 35%,transparent)}}
+@media(min-width:900px){.chat{grid-template-rows:none;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}.panel{margin:0;border-radius:0}}
+@media(max-width:420px){.brand{font-size:19px}.pill{padding:0 10px}.cap b{font-size:20px}.mode{padding:4px 8px}}
+@media(prefers-reduced-motion:reduce){.robot .bob,.robot.talking .mouth,.typing span,.mic.on,.mic.wait{animation:none}.robot.talking .mouth{transform:scaleY(1.2)}.robot .gaze,.av,.sc{transition:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="bar">
+    <div class="brand"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 5h18a6 6 0 0 1 6 6v9a6 6 0 0 1-6 6H15l-7 6v-6a6 6 0 0 1-6-6v-9a6 6 0 0 1 6-6z" fill="#f2dcb3"/><path d="M27 14h5a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5v5l-6-5h-7a5 5 0 0 1-4-2" fill="#e4553c"/><circle cx="11" cy="15.5" r="2.2" fill="#0d4a55"/><circle cx="17" cy="15.5" r="2.2" fill="#0d4a55"/><circle cx="23" cy="15.5" r="2.2" fill="#0d4a55"/></svg><span>English Majlis</span></div>
+    <div class="tools">
+      <span class="pill" title="Your stars"><svg class="i fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><b id="starN">0</b></span>
+      <button class="ib" id="sndBtn" type="button" aria-label="Sound on"></button>
+      <button class="ib" id="homeBtn" type="button" aria-label="Choose your friend" hidden></button>
+    </div>
+  </header>
+  <main>
+    <section id="pick" class="screen scroll-y">
+      <div class="wrap">
+        <h1>Choose your English friend</h1>
+        <p class="lead">Chat in English about everyday situations. Your friend corrects you kindly as you go, so every answer helps you learn.</p>
+        <div class="cards">
+          <button class="av" type="button" data-av="f"><div class="pic" id="picF"></div><div class="cap"><b>Muzna</b><span>Omani lady · black abaya and shayla</span><span class="hi"></span></div></button>
+          <button class="av" type="button" data-av="m"><div class="pic" id="picM"></div><div class="cap"><b>Hamed</b><span id="capM">Omani man · dishdasha and kumma cap</span><span class="hi"></span></div></button>
+        </div>
+        <div class="setup">
+          <label class="fld"><span>Your name</span><input id="nameIn" maxlength="24" placeholder="e.g. Aisha" autocomplete="given-name"></label>
+          <div class="fld"><span>Your level</span><div class="seg" id="lvlSeg"><button type="button" data-v="Beginner">Beginner</button><button type="button" data-v="Intermediate">Intermediate</button><button type="button" data-v="Advanced">Advanced</button></div></div>
+          <div class="fld" id="hatFld"><span>Hamed wears</span><div class="seg" id="hatSeg"><button type="button" data-v="kumma">Kumma cap</button><button type="button" data-v="massar">Massar (amama)</button></div></div>
+          <button class="go" id="goBtn" type="button">Start talking <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <p class="credit">Developed by Ms. Amina Qatan</p>
+      </div>
+    </section>
+    <section id="scene" class="screen scroll-y" hidden>
+      <div class="wrap">
+        <div class="greet"><div class="head" id="sceneHead"></div><div class="say" id="sceneSay"></div></div>
+        <div class="grid" id="scGrid"></div>
+        <p class="credit">Developed by Ms. Amina Qatan</p>
+      </div>
+    </section>
+    <section id="chat" class="screen chat" hidden>
+      <div class="stage"><div class="bg" id="stageBg"></div><div id="stageBot"></div><span class="role" id="roleTag"></span></div>
+      <div class="panel">
+        <div class="ptop"><button class="ib" id="backBtn" type="button" aria-label="Back to situations"></button><div class="pt"><b id="scTitle"></b><div class="dots" id="dots"></div></div><span class="mode off" id="modeTag">Practice</span><button class="tb" id="voiceBtn" type="button" hidden>Voice</button></div>
+        <div class="log" id="log" aria-live="polite"></div>
+        <div class="retry" id="retry" hidden><span>Type it again: <b id="retryT"></b></span><button id="retrySkip" class="tb" type="button">Skip</button></div>
+        <div class="hints" id="hints"></div>
+        <form class="ask" id="ask"><input id="inp" autocomplete="off" placeholder="Type or speak your answer" enterkeyhint="send" aria-label="Your answer"><button type="button" class="ib mic" id="micBtn" aria-label="Speak your answer"></button><button class="ib send" id="sendBtn" aria-label="Send"></button></form>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="win" id="win" hidden role="dialog" aria-modal="true" aria-labelledby="wT">
+  <div class="wcard">
+    <svg viewBox="0 0 110 84" aria-hidden="true"><g stroke="#f0a91a" stroke-width="3" stroke-linecap="round"><path d="M55 6v8M22 18l6 6M88 18l-6 6M10 46h8M92 46h8"/></g><path d="M55 18l8.6 18 19.7 2.4-14.5 13.5 3.7 19.6L55 61.9l-17.5 9.6 3.7-19.6-14.5-13.5L46.4 36z" fill="#ffc94a" stroke="#e0a21c" stroke-width="2" stroke-linejoin="round"/></svg>
+    <h2 id="wT"></h2>
+    <p id="wP"></p>
+    <h3>Phrases to remember</h3>
+    <ul id="wL"></ul>
+    <div class="wb"><button class="go" id="wNext" type="button">Choose another situation</button><button class="tb" id="wAgain" type="button" style="justify-content:center">Practise this one again</button></div>
+  </div>
+</div>
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const IC={
+ chat:'<path d="M4 4h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M21 9v6a2 2 0 0 1-2 2v3l-3-3h-4"/>',
+ food:'<path d="M3 18h18M5 18a7 7 0 0 1 14 0M12 8V6M10 6h4"/>',
+ bed:'<path d="M3 19V6M3 15h18v4M21 15v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="12" r="2"/>',
+ bus:'<rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 10h16M8 20v-3M16 20v-3"/><circle cx="8" cy="13.5" r=".6"/><circle cx="16" cy="13.5" r=".6"/>',
+ plane:'<path d="M12 2.5c.8 0 1.5.7 1.5 1.5v5l7 4.5V15l-7-2.2V17l2 1.5V20L12 19l-3.5 1v-1.5l2-1.5v-4.2L3.5 15v-1.5l7-4.5V4c0-.8.7-1.5 1.5-1.5z"/>',
+ bag:'<path d="M5 8h14l-1 13H6L5 8z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/>',
+ pill:'<rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/>',
+ pin:'<path d="M12 21s7-6 7-11.5a7 7 0 0 0-14 0C5 15 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+ spk:'<path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
+ spkOff:'<path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
+ send:'<path d="M4 12l16-8-6 16-2.5-6.5z"/>',
+ home:'<path d="M4 11l8-6.5 8 6.5V20h-5v-5.5H9V20H4z"/>',
+ back:'<path d="M15 5l-7 7 7 7"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ spark:'<path d="M12 3l1.9 5.6 5.6 1.9-5.6 1.9L12 18l-1.9-5.6-5.6-1.9 5.6-1.9z"/>',
+ pencil:'<path d="M4 20l1-4.5L16 4.5l3.5 3.5L8.5 19z"/><path d="M14 7l3 3"/>',
+ star:'<path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/>'
+};
+const ic=(n,c)=>`<svg class="i ${c||''}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
+
+/* ---------- situations (sample role-plays) ---------- */
+const SC=[
+ {id:'greet',t:'Meet & greet',s:'Introduce yourself',r:'your new friend',y:'yourself',tag:'{bot} is your new friend · just be yourself',topic:'getting to know each other',ic:'chat',c:'#0d8487',
+  st:[["Hello {name}! I'm {bot}, your English friend. Nice to meet you! Where are you from?",["Nice to meet you too. I'm from Salalah.","I'm from Sohar. And you?"]],
+   ["Lovely! Are you a student, or do you work?",["I'm a student at the college.","I work in a hotel."]],
+   ["That's great. What do you like doing in your free time?",["I like playing football.","I enjoy reading and swimming."]],
+   ["Nice! What did you do last weekend?",["I visited my family.","I went to the beach with my friends."]],
+   ["That sounds fun. What's your favourite Omani food?",["I love shuwa.","My favourite food is maqbous."]]],
+  bye:"It was really nice talking with you, {name}. Let's chat again soon!"},
+ {id:'food',t:'Restaurant',s:'Order a meal',r:'the waiter',y:'the customer',topic:'ordering food',ic:'food',c:'#e4553c',
+  st:[["Good evening, and welcome to Al Bahar Restaurant! A table for how many people?",["A table for two, please.","Just one, please."]],
+   ["Right this way. Here's the menu. What would you like to drink?",["I'd like a fresh lemon and mint juice, please.","Water, please."]],
+   ["Great choice. And what would you like to eat?",["I'd like the grilled kingfish with rice, please.","Could I have the chicken biryani, please?"]],
+   ["Would you like a salad or soup with that?",["A salad, please.","No, thank you."]],
+   ["Here you are. Enjoy your meal! Is everything OK?",["Yes, it's delicious, thank you.","Could I have some more bread, please?"]],
+   ["Would you like anything else?",["Could I have the bill, please?","No, thanks. Everything was great."]]],
+  bye:"Thank you for coming! Have a lovely evening, {name}."},
+ {id:'hotel',t:'Hotel',s:'Book a room',r:'the receptionist',y:'the guest',topic:'booking a hotel room',ic:'bed',c:'#2f66a8',
+  st:[["Good afternoon, welcome to the Sea View Hotel. How can I help you?",["I'd like to book a room, please.","I have a reservation."]],
+   ["Of course. How many nights would you like to stay?",["Three nights, please.","From Sunday to Wednesday."]],
+   ["Would you like a single room or a double room?",["A double room, please.","A single room with a sea view, please."]],
+   ["The double room is 45 rials a night, with breakfast. Is that OK?",["Yes, that's fine.","Do you have anything cheaper?"]],
+   ["Perfect. Could I have your name and phone number, please?",["My name is {nm}. My number is 9123 4567.","Sure. It's 9876 5432."]],
+   ["Thank you. Your room is booked. Do you have any questions?",["What time is check-out?","Is there Wi-Fi in the room?"]]],
+  bye:"You're welcome. Enjoy your stay with us, {name}!"},
+ {id:'ticket',t:'Bus tickets',s:'Buy a ticket',r:'the ticket seller',y:'the passenger',topic:'buying a bus ticket',ic:'bus',c:'#7b4a9a',
+  st:[["Hello! Welcome to the bus station. Where would you like to go?",["I'd like a ticket to Muscat, please.","One ticket to Nizwa, please."]],
+   ["Sure. When would you like to travel?",["Tomorrow morning, please.","On Thursday afternoon."]],
+   ["One way or return?",["A return ticket, please.","One way, please."]],
+   ["The bus leaves at 7 a.m. and arrives at 7 p.m. Is that OK?",["Yes, that's perfect.","Is there a later bus?"]],
+   ["That's 15 rials, please. How would you like to pay?",["By card, please.","In cash. Here you are."]],
+   ["Here's your ticket. Do you have any questions?",["Where does the bus leave from?","Can I take a big bag with me?"]]],
+  bye:"Have a safe trip, {name}!"},
+ {id:'airport',t:'Airport',s:'Check in for a flight',r:'the check-in agent',y:'the passenger',topic:'checking in at the airport',ic:'plane',c:'#0b6f86',
+  st:[["Good morning! May I see your passport and ticket, please?",["Here you are.","Sure, here's my passport."]],
+   ["Thank you. Where are you flying to today?",["I'm flying to Muscat.","To Dubai, please."]],
+   ["How many bags are you checking in?",["Just one bag.","Two bags, please."]],
+   ["Did you pack your bags yourself?",["Yes, I did.","Yes, I packed them myself."]],
+   ["Would you like a window seat or an aisle seat?",["A window seat, please.","An aisle seat, please."]],
+   ["Here's your boarding pass. Boarding is at 9:30 from Gate 5. Anything else?",["Where is Gate 5?","No, thank you very much."]]],
+  bye:"Have a great flight, {name}!"},
+ {id:'shop',t:'Clothes shop',s:'Buy something to wear',r:'the shop assistant',y:'the customer',topic:'shopping for clothes',ic:'bag',c:'#c2681a',
+  st:[["Hello! Welcome to our shop. Can I help you?",["Yes, please. I'm looking for a jacket.","I'm just looking, thank you."]],
+   ["Sure. What size are you?",["Medium, please.","I think I'm a large."]],
+   ["And what colour would you like?",["Do you have it in blue?","White, please."]],
+   ["Here you are. The fitting room is over there. How does it fit?",["It's a bit small. Do you have a bigger size?","It fits well, thank you."]],
+   ["It's 12 rials. Would you like to pay by cash or card?",["By card, please.","Is there a discount?"]]],
+  bye:"Thank you for shopping with us, {name}!"},
+ {id:'pharmacy',t:'Pharmacy',s:'Ask for medicine',r:'the pharmacist',y:'the customer',topic:'the pharmacy visit',ic:'pill',c:'#b8405e',
+  st:[["Good morning. How can I help you today?",["I have a headache. Do you have something for it?","I have a bad cold."]],
+   ["I'm sorry to hear that. How long have you had it?",["Since yesterday.","For two days."]],
+   ["Are you allergic to any medicine?",["No, I'm not.","Yes, I'm allergic to penicillin."]],
+   ["Take one tablet twice a day, after meals. Is that clear?",["Yes, thank you. Twice a day after meals.","Sorry, could you repeat that, please?"]],
+   ["That's 3 rials, please. Anything else?",["No, thank you. Here you are.","Do you sell vitamins?"]]],
+  bye:"Here you are. I hope you feel better soon, {name}!"},
+ {id:'way',t:'Directions',s:'Ask the way',r:'a helpful local',y:'a visitor',topic:'asking for directions',ic:'pin',c:'#3d5a66',
+  st:[["Hi there! You look a little lost. Can I help you?",["Yes, please. Where is the museum?","Excuse me, how can I get to the post office?"]],
+   ["Sure! Go straight and take the second street on the left. Is that clear?",["The second street on the left. Got it!","Sorry, could you say that again, please?"]],
+   ["Then it's next to the bank, opposite the park. Are you walking or driving?",["I'm walking.","I'm driving."]],
+   ["It's about ten minutes on foot. Shall I show you on the map?",["Yes, please. That would be great.","No, thanks. I can find it."]]],
+  bye:"No problem! Enjoy your visit, {name}."}
+];
+const LV={Beginner:{rate:.85,g:'beginner (A1 to A2): use very short, simple sentences and common words. Be forgiving and only fix clear mistakes that matter.'},
+ Intermediate:{rate:.95,g:'intermediate (B1): use clear everyday sentences and bring in a useful new phrase now and then.'},
+ Advanced:{rate:1,g:'advanced (B2 to C1): speak naturally with polite, idiomatic phrases, and also point out wording that is correct but unnatural.'}};
+const BOT={f:'Muzna',m:'Hamed'};
+const BANNED=/\b(sex|sexy|sexual|boyfriends?|girlfriends?|dating|kiss(es|ing)?|wine|beer|alcohol|alcoholic|vodka|whiske?y|champagne|pork|pigs?|bacon|ham|gambl\w*|casino|religions?|religious|church|bible)\b/i;
+const PR={great:['Excellent, {name}!','Great job!','Well said!','Perfect English!','Super, {name}!','Lovely answer!'],upgrade:['Good, {name}!','Nice one!','Well done!'],fix:['Good try, {name}!','Nice effort!','Almost there, {name}!']};
+
+/* ---------- state ---------- */
+const S={screen:'pick',av:'f',hat:'kumma',name:'',level:'Beginner',sound:true,stars:0,done:[],vi:{f:-1,m:-1},sc:null,log:[],turn:0,round:0,streak:0,phr:[],hints:[],over:false,retry:null};
+const KEY='english-majlis-v1';
+function save(){try{localStorage.setItem(KEY,JSON.stringify({av:S.av,hat:S.hat,name:S.name,level:S.level,sound:S.sound,stars:S.stars,done:S.done,vi:S.vi}))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&typeof d==='object')Object.assign(S,d)}catch(e){}}
+const nm=()=>S.name.trim()||'friend';
+const fx=t=>String(t).replace(/\{name\}/g,nm()).replace(/\{nm\}/g,S.name.trim()||'Ali').replace(/\{bot\}/g,BOT[S.av]);
+const scn=()=>SC.find(s=>s.id===S.sc)||SC[0];
+const pick=a=>fx(a[Math.floor(Math.random()*a.length)]);
+
+/* ---------- capabilities ---------- */
+let sample=null,tts=null,dict=null,aiOff=false,listening=false,dBase='',busy=false;
+const use=n=>{try{return window.claude&&window.claude.use?Promise.resolve(window.claude.use(n)).catch(()=>null):Promise.resolve(null)}catch(e){return Promise.resolve(null)}};
+use('sample').then(s=>{sample=s;modeTag()});
+use('tts').then(t=>{tts=t;if(t&&t.onState)t.onState(o=>talk(o&&o.state==='speaking'));voiceLabel()});
+use('dictation').then(d=>{dict=d;if(!d)return;
+ d.onPartial(o=>{if(!listening)return;$('#inp').value=(dBase+' '+(o.text||'')).trim();bumpSilence()});
+ d.onFinal(o=>{dBase=(dBase+' '+(o.text||'')).trim();$('#inp').value=dBase;if(listening)bumpSilence()});
+ d.onState(o=>setListening(o.state==='listening'))});
+
+/* ---------- drawing ---------- */
+function palm(x,y,f){const tx=x+f*18,ty=y-112;const L=[[-56,18],[-42,42],[-12,50],[22,44],[50,20],[34,-10],[-26,-12]];
+ return `<path d="M${x} ${y}C${x+f*6} ${y-40} ${x+f*2} ${y-80} ${tx} ${ty}" stroke="#8a5b3b" stroke-width="9" fill="none" stroke-linecap="round"/>`+
+ L.map(([dx,dy],i)=>{dx*=f;const mx=tx+dx/2,my=ty+dy/2;return `<path d="M${tx} ${ty}Q${mx} ${my-16} ${tx+dx} ${ty+dy}Q${mx} ${my-5} ${tx} ${ty}Z" fill="${i%2?'#2f8a58':'#3aa267'}"/>`}).join('')+
+ `<circle cx="${tx-4*f}" cy="${ty+6}" r="4" fill="#7a4b2c"/><circle cx="${tx+3*f}" cy="${ty+8}" r="4" fill="#6b4126"/>`}
+function sceneSVG(p){return `<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="${p}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc48c"/><stop offset="1" stop-color="#ffe9c9"/></linearGradient><linearGradient id="${p}e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#36b9b1"/><stop offset="1" stop-color="#127c84"/></linearGradient></defs>
+<rect width="400" height="300" fill="url(#${p}k)"/><circle cx="292" cy="170" r="34" fill="#fff4d8"/>
+<path d="M0 182C50 150 96 156 140 170C190 140 250 142 300 162C340 150 372 154 400 160V200H0Z" fill="#82ad8f" opacity=".75"/>
+<rect x="296" y="180" width="36" height="20" fill="#b97d55"/><path d="M330 200V158h4v-5h5v5h5v-5h5v5h5v-5h4v5h2V200Z" fill="#c88c62"/><path d="M341 200v-10a4 4 0 0 1 8 0v10z" fill="#8a5838"/><rect x="344" y="166" width="3" height="7" fill="#8a5838"/>
+<path d="M0 194C60 180 120 186 170 192C230 180 300 182 400 190V204H0Z" fill="#5f9978" opacity=".8"/>
+<rect y="198" width="400" height="46" fill="url(#${p}e)"/>
+<g stroke="#fff6dd" stroke-width="2" stroke-linecap="round" opacity=".75"><path d="M272 207h40M281 215h22M287 223h10M40 214h26M150 224h30M96 208h18"/></g>
+<path d="M0 236C110 226 280 228 400 238V300H0Z" fill="#f1d3a2"/><path d="M0 252C120 244 280 246 400 254V300H0Z" fill="#e8c48e" opacity=".6"/>
+${palm(36,238,1)}${palm(372,242,-1)}</svg>`}
+function robotSVG(av,hat,p,crop){
+ const f=av==='f',K=`url(#${p}k)`,lx=f?102:100,rx=f?138:140,y=104,ew=10.5,eh=f?12.5:12;
+ let d=`<radialGradient id="${p}k" cx=".42" cy=".36" r=".72"><stop offset="0" stop-color="#f6cfa6"/><stop offset=".6" stop-color="#dea476"/><stop offset="1" stop-color="#bf8257"/></radialGradient><radialGradient id="${p}i" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#a06a3c"/><stop offset="1" stop-color="#4a2a15"/></radialGradient><clipPath id="${p}e"><ellipse cx="${lx}" cy="${y}" rx="${ew}" ry="${eh}"/><ellipse cx="${rx}" cy="${y}" rx="${ew}" ry="${eh}"/></clipPath>`;
+ const eyes=`<g class="blink"><ellipse cx="${lx}" cy="${y}" rx="${ew}" ry="${eh}" fill="#fff"/><ellipse cx="${rx}" cy="${y}" rx="${ew}" ry="${eh}" fill="#fff"/><g clip-path="url(#${p}e)"><g class="gaze">${[lx,rx].map(x=>`<circle cx="${x}" cy="${y+1}" r="7.2" fill="url(#${p}i)"/><circle cx="${x}" cy="${y+1}" r="3.4" fill="#170d07"/><circle cx="${x+2.6}" cy="${y-2.4}" r="2.3" fill="#fff"/><circle cx="${x-2}" cy="${y+3.4}" r="1" fill="#fff" opacity=".8"/>`).join('')}</g></g><path d="M${lx-ew} ${y-1}Q${lx} ${y-2*eh+1.5} ${lx+ew} ${y-2}M${rx-ew} ${y-2}Q${rx} ${y-2*eh+1.5} ${rx+ew} ${y-1}" fill="none" stroke="#2a180e" stroke-width="${f?3:2.4}" stroke-linecap="round"/>${f?`<path d="M${lx-ew} ${y-1}l-4-3M${lx-ew+2} ${y-6}l-3-4M${rx+ew} ${y-1}l4-3M${rx+ew-2} ${y-6}l3-4" stroke="#2a180e" stroke-width="2" stroke-linecap="round"/>`:''}</g>`;
+ const cheeks=`<ellipse cx="${f?89:86}" cy="${f?122:124}" rx="8" ry="5" fill="#ef7f6e" opacity=".35"/><ellipse cx="${f?151:154}" cy="${f?122:124}" rx="8" ry="5" fill="#ef7f6e" opacity=".35"/>`;
+ const nose=`<ellipse cx="120" cy="${f?120:121}" rx="${f?5:6}" ry="${f?3.8:4.5}" fill="#c4825a" opacity=".85"/><circle cx="118.2" cy="${f?118.4:119}" r="1.8" fill="#fff" opacity=".5"/>`;
+ let g='';
+ if(f){
+  d+=`<linearGradient id="${p}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b3c44"/><stop offset="1" stop-color="#0b0c0f"/></linearGradient>`;
+  let dots='';for(let yy=214,k=0;yy<258;yy+=8,k++)dots+=`<circle cx="114" cy="${yy}" r="1.8" fill="${k%2?'#e4553c':'#f2dcb3'}"/><circle cx="126" cy="${yy}" r="1.8" fill="${k%2?'#f2dcb3':'#e4553c'}"/>`;
+  g=`<path d="M24 260C28 214 58 190 100 182H140C182 190 212 214 216 260Z" fill="url(#${p}a)"/><path d="M120 206V260" stroke="#2b2c33" stroke-width="3"/>${dots}
+<path d="M54 96C50 40 84 18 120 18S190 40 186 96L192 170C196 188 206 198 212 214C170 228 70 228 28 214C34 198 44 188 48 170Z" fill="#17181c"/>
+<path d="M70 60C80 34 104 24 124 23" stroke="#fff" stroke-opacity=".08" stroke-width="6" stroke-linecap="round" fill="none"/>
+<path d="M76 100C76 64 96 50 120 50C144 50 164 64 164 100C164 134 146 158 120 158C94 158 76 134 76 100Z" fill="${K}"/>
+${cheeks}${nose}${eyes}
+<path d="M90 87Q102 80 113 85M127 85Q138 80 150 87" stroke="#2a180e" stroke-width="3" stroke-linecap="round" fill="none"/>
+<g class="mouth"><path d="M108 133Q120 146 132 133Z" fill="#7b2a2c" stroke="#c4566a" stroke-width="2.5" stroke-linejoin="round"/><path d="M110 134.5Q120 137.5 130 134.5L129 136.5Q120 139 111 136.5Z" fill="#fff"/><path d="M115.5 137.8Q120 136 124.5 137.8Q120 139.2 115.5 137.8Z" fill="#d6606a"/></g>
+<path d="M72 132A50 62 0 1 1 168 132" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="20"/>
+<path d="M72 132A50 62 0 1 1 168 132" fill="none" stroke="#1f2025" stroke-width="13" stroke-linecap="round"/>
+<path d="M66 132A56 68 0 1 1 174 132" fill="none" stroke="#f2dcb3" stroke-width="1.8" stroke-dasharray=".5 6" stroke-linecap="round" opacity=".85"/>
+<path d="M66 128C70 170 100 186 132 182C158 178 176 160 186 134L196 204C160 222 80 222 44 204Z" fill="#202126"/>
+<path d="M72 170C100 194 150 192 186 166M60 190C100 210 150 208 192 188" fill="none" stroke="#34353d" stroke-width="2"/>`;
+ }else{
+  d+=`<linearGradient id="${p}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d3dae0"/></linearGradient><linearGradient id="${p}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2618"/><stop offset="1" stop-color="#1c110a"/></linearGradient>`;
+  let h;
+  if(hat==='massar'){
+   d+=`<pattern id="${p}s" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(-14)"><rect width="12" height="12" fill="#6d2a52"/><path d="M0 6H12" stroke="#5a2045" stroke-width="1.2"/><circle cx="3" cy="3" r="1.6" fill="#e9c98f"/><circle cx="9" cy="9" r="1.3" fill="#d27aa6"/></pattern>`;
+   h=`<path d="M64 92C90 78 150 78 176 92" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="7"/><path d="M62 90C55 48 86 20 120 20S185 48 178 90C152 74 88 74 62 90Z" fill="url(#${p}s)"/><path d="M64 80C92 60 150 54 177 72M68 62C98 42 148 40 174 54M82 42C104 30 138 29 160 38" fill="none" stroke="#3f1530" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/><path d="M66 74C94 54 148 50 176 66" fill="none" stroke="#e9c98f" stroke-width="2" stroke-dasharray="1 4" stroke-linecap="round"/><path d="M62 90C88 74 152 74 178 90" fill="none" stroke="#e9c98f" stroke-width="3"/><path d="M86 30C98 24 110 22 120 22" stroke="#fff" stroke-opacity=".25" stroke-width="4" stroke-linecap="round" fill="none"/>`;
+  }else{
+   d+=`<pattern id="${p}c" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#fbf6ea"/><path d="M5 1.5L8 5L5 8.5L2 5Z" fill="#9b2f3f"/><circle cx="0" cy="0" r="1.3" fill="#2d5f8a"/><circle cx="10" cy="0" r="1.3" fill="#2d5f8a"/><circle cx="0" cy="10" r="1.3" fill="#2d5f8a"/><circle cx="10" cy="10" r="1.3" fill="#2d5f8a"/></pattern>`;
+   h=`<path d="M72 85C96 75 144 75 168 85" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="7"/><path d="M70 82C68 42 92 28 120 28S172 42 170 82C146 72 94 72 70 82Z" fill="url(#${p}c)"/><path d="M152 33C166 43 172 60 170 82C163 79 156 77 149 76Z" fill="#000" opacity=".08"/><path d="M70 82C94 72 146 72 170 82" fill="none" stroke="#9b2f3f" stroke-width="4"/><path d="M73 76C97 67 143 67 167 76" fill="none" stroke="#2d5f8a" stroke-width="1.5" stroke-dasharray="2 2.5"/><ellipse cx="120" cy="35" rx="26" ry="5" fill="none" stroke="#9b2f3f" stroke-width="1.5" opacity=".7"/>`;
+  }
+  g=`<rect x="106" y="146" width="28" height="52" rx="10" fill="#c88a5d"/>
+<path d="M28 260C32 214 62 190 98 184C104 196 136 196 142 184C178 190 208 214 212 260Z" fill="url(#${p}d)"/>
+<path d="M98 185C104 197 136 197 142 185" fill="none" stroke="#c2a675" stroke-width="2" stroke-dasharray="3 2"/>
+<path d="M120 194C121 207 122 220 123 231" stroke="#b8955b" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M123 229c-3 0-4.5 4-3.5 9 .8 3.4 5.4 3.4 6.2 0 1-5-.7-9-2.7-9z" fill="#b8955b"/>
+<path d="M70 210C80 230 84 246 86 260M170 210C160 230 156 246 154 260" fill="none" stroke="#c6cfd6" stroke-width="2"/>
+<ellipse cx="71" cy="110" rx="9" ry="13" fill="${K}"/><ellipse cx="169" cy="110" rx="9" ry="13" fill="${K}"/><path d="M72 103q-5 7 0 14M168 103q5 7 0 14" stroke="#b3734a" stroke-width="2" fill="none" stroke-linecap="round"/>
+<path d="M72 100C72 62 94 46 120 46C146 46 168 62 168 100C168 138 148 164 120 164C92 164 72 138 72 100Z" fill="${K}"/>
+${cheeks}
+<path d="M73 106C74 140 96 168 120 168C144 168 166 140 167 106C163 124 156 138 146 145C138 152 130 154 120 154C110 154 102 152 94 145C84 138 77 124 73 106Z" fill="url(#${p}b)"/>
+<path d="M72 78C69 90 70 100 73 108L79 106C77 96 77 86 80 78ZM168 78C171 90 170 100 167 108L161 106C163 96 163 86 160 78Z" fill="#2a1a10"/>
+${nose}${eyes}
+<path d="M86 88Q99 81 112 86M128 86Q141 81 154 88" stroke="#24150c" stroke-width="5" stroke-linecap="round" fill="none"/>
+<path d="M104 132Q112 126 120 129Q128 126 136 132Q128 134.5 120 133Q112 134.5 104 132Z" fill="url(#${p}b)"/>
+<g class="mouth"><path d="M107 136Q120 150 133 136Z" fill="#7b2a2c"/><path d="M109 137Q120 140 131 137L130.5 138.8Q120 141.5 109.5 138.8Z" fill="#fff"/><path d="M115.5 141.5Q120 139.5 124.5 141.5Q120 143 115.5 141.5Z" fill="#d6606a"/></g>${h}`;
+ }
+ return `<svg class="robot" data-av="${av}" viewBox="${crop?'40 12 160 160':'0 0 240 260'}" role="img" aria-label="${BOT[av]}, your English friend"><defs>${d}</defs><g class="bob">${g}</g></svg>`;
+}
+
+/* ---------- robot life: gaze, blink, talk ---------- */
+let idleT=0,talkT=0;
+function look(x,y){document.querySelectorAll('.robot').forEach(r=>{const b=r.getBoundingClientRect();const g=r.querySelector('.gaze');if(!b.width||!g)return;const dx=x-(b.left+b.width/2),dy=y-(b.top+b.height*.4),dd=Math.hypot(dx,dy)||1,k=Math.min(1,dd/260);g.style.transform=`translate(${(dx/dd*3.5*k).toFixed(1)}px,${(dy/dd*2.5*k).toFixed(1)}px)`});clearTimeout(idleT);idleT=setTimeout(()=>document.querySelectorAll('.robot .gaze').forEach(g=>g.style.transform=''),2500)}
+addEventListener('pointermove',e=>look(e.clientX,e.clientY),{passive:true});
+addEventListener('pointerdown',e=>look(e.clientX,e.clientY),{passive:true});
+const RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+if(!RM)setInterval(()=>{document.querySelectorAll('.robot').forEach(r=>{if(Math.random()<.55){r.classList.add('blinking');setTimeout(()=>r.classList.remove('blinking'),140)}})},2600);
+function talk(on,ms){clearTimeout(talkT);document.querySelectorAll('.robot').forEach(r=>r.classList.toggle('talking',!!on&&r.dataset.av===S.av&&!r.closest('[hidden]')));if(on&&ms)talkT=setTimeout(()=>talk(false),ms)}
+function thinking(on){document.querySelectorAll('#stageBot .robot').forEach(r=>r.classList.toggle('thinking',on))}
+
+/* ---------- voice ---------- */
+const VO=['buttery','airy','glassy','rounded'];
+const FEM=/female|samantha|victoria|karen|moira|tessa|serena|zira|susan|fiona|kate|libby|sonia|hazel|aria|jenny|allison|ava/i,MAL=/male|daniel|alex\b|fred|oliver|david|george|rishi|aaron|arthur|guy|ryan|thomas/i;
+function bList(){try{return window.speechSynthesis?speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)):[]}catch(e){return[]}}
+function vIdx(){const list=tts?VO:bList(),n=list.length;let i=S.vi[S.av];if(i==null||i<0||i>=n){if(tts)i=S.av==='f'?1:3;else{const f=S.av==='f';i=list.findIndex(v=>f?FEM.test(v.name):(MAL.test(v.name)&&!/female/i.test(v.name)));if(i<0)i=0}}return i}
+function voiceLabel(){const b=$('#voiceBtn');if(!b)return;const list=tts?VO:bList();b.hidden=!S.sound||!list.length;if(!list.length)return;const v=list[vIdx()];const n=tts?v[0].toUpperCase()+v.slice(1):String(v.name||'').split(/[\s(]/)[0];b.textContent='Voice';b.title='Voice: '+n+' (tap to change)'}
+try{if(window.speechSynthesis)speechSynthesis.onvoiceschanged=voiceLabel}catch(e){}
+const dur=t=>Math.min(9000,Math.max(1200,String(t).split(/\s+/).length*340/LV[S.level].rate));
+let sTok=0,shownVoice=false,unlocked=false;
+function speak(text){return new Promise(res=>{
+ const ms=dur(text),tok=++sTok;let done=false;
+ const fin=()=>{if(done)return;done=true;if(tok===sTok)talk(false);res()};
+ const fake=()=>{talk(true,ms);setTimeout(fin,ms)};
+ const go=()=>{
+  if(tok!==sTok){fin();return}
+  if(!S.sound){fake();return}
+  if(tts){talk(true,ms+4000);tts.speak(String(text).slice(0,1900),{voice:VO[vIdx()],rate:LV[S.level].rate,language:'en'}).then(fin).catch(e=>{if(e&&e.code==='not_granted'){tts=null;voiceLabel()}fake()});return}
+  const ss=window.speechSynthesis;
+  if(ss&&window.SpeechSynthesisUtterance){try{ss.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=LV[S.level].rate;const v=bList()[vIdx()];if(v){u.voice=v;u.lang=v.lang}let st=false;u.onstart=()=>{st=true};u.onend=fin;u.onerror=fin;talk(true,ms+4000);ss.speak(u);
+   setTimeout(()=>{if(!st&&!ss.speaking&&!done){noVoice();fake()}},1800);setTimeout(fin,ms*2+6000);return}catch(e){}}
+  noVoice();fake();
+ };
+ if(listening)stopListen(false).then(go);else go();
+})}
+const inClaude=!!(window.claude&&window.claude.use);
+function noVoice(){if(shownVoice||S.screen!=='chat')return;shownVoice=true;push({t:'tip',x:inClaude?"My voice can't play in this app, so please read my messages for now. To hear me talk, open this game in a web browser such as Chrome, or in the Claude desktop app.":"My voice can't play in this browser, so please read my messages for now. Try Chrome or Safari, and check that your sound is on."});renderAll()}
+addEventListener('pointerdown',()=>{if(unlocked)return;unlocked=true;try{if(!tts&&window.speechSynthesis&&window.SpeechSynthesisUtterance){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}}catch(e){}},{capture:true});
+
+/* ---------- listening (mic) ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let sr=null,webSR=!!SR,silT=0,lastVia='text',helped=false,nudgeT=0,nudged=false;
+function setListening(on){listening=!!on;const m=$('#micBtn'),i=$('#inp');m.classList.toggle('on',listening);m.classList.remove('wait');m.setAttribute('aria-label',listening?'Stop and send':'Speak your answer');i.classList.toggle('lis',listening);i.placeholder=listening?'Listening… speak now':'Type or speak your answer';if(listening)clearTimeout(nudgeT)}
+function bumpSilence(){clearTimeout(silT);silT=setTimeout(()=>{if(listening)stopListen(true)},1800)}
+function micWait(){$('#micBtn').classList.add('wait');$('#inp').placeholder='Tap the mic to answer, or type'}
+function micHelp(){$('#inp').focus();if(helped)return;helped=true;push({t:'tip',x:inClaude?"The microphone can't be used inside this app. You can still speak: tap the microphone on your phone's keyboard, then press send. To talk hands-free, open this game in Chrome on a computer or Android phone, or in the Claude desktop app.":"The microphone isn't working here. Please allow microphone access for this page, or use Chrome or Safari. You can also tap the microphone on your phone's keyboard, then press send."});renderAll()}
+function micFail(e,auto){setListening(false);const c=e&&e.code;if(c==='not_granted'){dict=null;if(!auto)micHelp();return}if(auto||c==='dismissed')micWait();else micHelp()}
+function listen(auto){
+ if(busy||S.over||listening||S.screen!=='chat')return;
+ clearTimeout(nudgeT);dBase=$('#inp').value.trim();
+ if(dict){hush();let pr;try{pr=dict.start()}catch(e){pr=Promise.reject(e)}Promise.resolve(pr).catch(e=>micFail(e,auto));clearTimeout(silT);silT=setTimeout(()=>{if(listening&&!$('#inp').value.trim())stopListen(false)},9000);return}
+ if(webSR){try{hush();sr=new SR();sr.lang='en-GB';sr.interimResults=true;sr.continuous=false;
+  sr.onresult=ev=>{let t='';for(let i=0;i<ev.results.length;i++)t+=ev.results[i][0].transcript;$('#inp').value=(dBase+' '+t).trim()};
+  sr.onstart=()=>setListening(true);
+  sr.onerror=ev=>{if(ev.error==='no-speech'||ev.error==='aborted')return;if(auto){micWait();return}webSR=false;micHelp()};
+  sr.onend=()=>{const was=listening;setListening(false);sr=null;if(was)finishListen()};
+  const me=sr;sr.start();setTimeout(()=>{if(sr===me&&!listening){me.onend=null;try{me.abort()}catch(e){}sr=null;if(auto){micWait();return}webSR=false;micHelp()}},2500);return}catch(e){webSR=false;sr=null}}
+ if(auto)micWait();else micHelp();
+}
+async function stopListen(andSend){clearTimeout(silT);
+ if(sr){const x=sr;if(!andSend)x.onend=()=>{setListening(false);sr=null};try{x.stop()}catch(e){setListening(false);sr=null}return}
+ if(dict&&listening){try{await dict.stop()}catch(e){}}
+ setListening(false);if(andSend)finishListen()}
+function finishListen(){const t=$('#inp').value.trim();if(!t)return;lastVia='voice';send(t)}
+function armNudge(){clearTimeout(nudgeT);nudgeT=setTimeout(()=>{if(S.screen!=='chat'||S.over||busy||listening||nudged||$('#inp').value.trim()||!S.hints.length)return;nudged=true;const x=`Take your time, ${nm()}. You could say: "${S.hints[0]}"`;push({t:'bot',x});renderAll();speak(x).then(afterSpeak)},25000)}
+function afterSpeak(){if(S.screen!=='chat'||S.over||busy)return;if(lastVia==='voice')listen(true);armNudge()}
+function leave(){hush();if(listening)stopListen(false);clearTimeout(nudgeT);$('#micBtn').classList.remove('wait')}
+function hush(){sTok++;try{if(tts&&tts.stop)tts.stop()}catch(e){}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}talk(false)}
+
+/* ---------- local English checker (used in practice mode) ---------- */
+const BASE={went:'go',ate:'eat',saw:'see',came:'come',took:'take',bought:'buy',had:'have',made:'make',gave:'give',did:'do',booking:'book',ordering:'order',buying:'buy',going:'go',having:'have',making:'make',travelling:'travel',traveling:'travel',reserving:'reserve',paying:'pay',asking:'ask'};
+const UNC={informations:'information',advices:'advice',furnitures:'furniture',luggages:'luggage',baggages:'baggage',equipments:'equipment',homeworks:'homework'};
+const NUM='(two|three|four|five|six|seven|eight|nine|ten|[2-9]|\\d{2,})';
+const RULES=[
+ [/\b(i am|i'm) agree\b/gi,'I agree','We say "I agree", without "am".'],
+ [/\b(?:i am|i'm) go\b/gi,"I'm going",'Say "I\'m going" or "I go".'],
+ [/\b(?:i am|i'm) (want|need|like|have|know|think|live|work|study|love)\b/gi,(m,v)=>'I '+v,'No "am" before "want": say "I want" or "I would like".'],
+ [/\b(can|could|should|must|will|would) (i|you|we|he|she|they) to\b/gi,'$1 $2','After "can" or "could", use the verb without "to".'],
+ [/\b(can|could|should|must) to\b/gi,'$1','After "can" or "could", use the verb without "to".'],
+ [/\bi have (\d+) years\b/gi,'I am $1 years old','For age, we say "I am 20 years old".'],
+ [/\bmy name (?!is\b|'s\b|was\b|and\b|in\b|on\b)([a-z]+)/gi,'my name is $1','Remember "is": "My name is…"'],
+ [/\bi from\b/gi,'I am from','Add "am": "I am from…"'],
+ [/\b(he|she|it) don'?t\b/gi,"$1 doesn't",'With he, she and it, use "doesn\'t".'],
+ [/\bdidn'?t (went|ate|saw|came|took|bought|had|made|gave|did)\b/gi,(m,v)=>"didn't "+BASE[v.toLowerCase()],'After "didn\'t", use the base verb: "didn\'t go".'],
+ [/\b(forward )?to (booking|ordering|buying|going|having|making|travelling|traveling|reserving|paying|asking)\b/gi,(m,f,v)=>f?m:'to '+BASE[v.toLowerCase()],'After "to", use the base verb: "to book".'],
+ [/\bmore (better|cheaper|bigger|smaller|faster|easier|nicer|closer|larger)\b/gi,'$1','No "more" before "-er" words: just "cheaper".'],
+ [/\b(informations|advices|furnitures|luggages|baggages|equipments|homeworks)\b/gi,m=>UNC[m.toLowerCase()],'This word has no plural form.'],
+ [/\ba (help|advice|information|luggage|furniture|homework)\b/gi,'some $1','This word is uncountable: "some help".'],
+ [new RegExp('\\b'+NUM+' person\\b','gi'),'$1 people','For more than one person, we say "people".'],
+ [new RegExp('\\b'+NUM+' (night|ticket|room|bag|day|week|hour|minute|adult|bottle|coffee|juice|shirt|seat)\\b','gi'),'$1 $2s','Add "s" for more than one: "three nights".'],
+ [new RegExp('\\b'+NUM+' child\\b','gi'),'$1 children','The plural of "child" is "children".'],
+ [/\bhow (?:much|many) (?:is )?costs?\b( (?:the|this|that|a|an) [a-z]+)?/gi,(m,o)=>o?'how much does'+o+' cost':'how much does it cost','We ask "How much does it cost?"'],
+ [/\bhow many (money|is it|does it cost)\b/gi,(m,x)=>'how much '+x,'For prices, use "how much".'],
+ [/^\s*where the\b/gi,'Where is the','Add "is": "Where is the…?"'],
+ [/\b(open|close) the (lights?|air conditioner|ac|tv|television)\b/gi,(m,v,o)=>(v.toLowerCase()==='open'?'turn on':'turn off')+' the '+o,'For lights and machines, say "turn on" or "turn off".'],
+ [/\bexplain me\b/gi,'explain to me','We say "explain to me".'],
+ [/\bdiscuss about\b/gi,'discuss','"Discuss" does not need "about".'],
+ [/\bi very (like|love|enjoy)\b/gi,'I really $1','Say "I really like…" or "I like… very much".'],
+ [/\ba ([aeiou][a-z]*)/gi,(m,w)=>/^(uni|use|usu|eu|one|once)/i.test(w)?m:(m[0]==='A'?'An ':'an ')+w,'Use "an" before a vowel sound: "an apple".'],
+ [/\ban ([bcdfghj-np-tv-z][a-z]*)/gi,(m,w)=>/^(hour|honest|honou?r|heir)/i.test(w)?m:(m[0]==='A'?'A ':'a ')+w,'Use "a" before a consonant sound: "a ticket".']
+];
+const UPS=[
+ [/\bi want\b/gi,'I would like','"I would like…" sounds more polite.'],
+ [/^\s*(?:please )?give me\b/gi,'Could I have','"Could I have…, please?" sounds more polite.'],
+ [new RegExp('\\b'+NUM+' persons\\b','gi'),'$1 people','We usually say "people".'],
+ [/\breturn back\b/gi,'return','"Return" already means "go back".'],
+ [/\brepeat again\b/gi,'repeat','"Repeat" already means "say again".'],
+ [/\bthe price is (very )?expensive\b/gi,(m,v)=>'the price is '+(v||'')+'high','Things are "expensive"; prices are "high".']
+];
+function check(text){
+ let w=text,tip='',kind=null;
+ const run=(list,k)=>{for(const [re,rep,t] of list){re.lastIndex=0;const n=w.replace(re,rep);if(n!==w){w=n;if(!tip)tip=t;if(k==='fix'||!kind)kind=k}}};
+ run(RULES,'fix');run(UPS,'upgrade');
+ if(!kind)return null;
+ w=w.replace(/\bi\b/g,'I').replace(/\s+/g,' ').trim();
+ w=w.charAt(0).toUpperCase()+w.slice(1);
+ if(!/[.!?]$/.test(w))w+=/^(can|could|would|do|does|is|are|where|what|when|how|which|who|may)\b/i.test(w)?'?':'.';
+ return{kind,better:w,tip};
+}
+const norm=s=>String(s).toLowerCase().replace(/[’`]/g,"'").replace(/\bi'd\b/g,'i would').replace(/\bi'm\b/g,'i am').replace(/\b(it|that|what|there|here)'s\b/g,'$1 is').replace(/n't\b/g,' not').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+function lev(a,b){let p=Array.from({length:b.length+1},(_,j)=>j);for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[b.length]}
+function near(a,b){a=norm(a);b=norm(b);return a===b||lev(a,b)<=Math.max(1,Math.floor(b.length*.08))}
+function localTurn(text){
+ const s=scn(),i=Math.min(S.turn,s.st.length-1);
+ if(/[؀-ۿ]/.test(text))return{kind:'fix',better:'',tip:"Let's answer in English. Tap an idea below if you need help.",praise:`Good try, ${nm()}!`,reply:fx(s.st[i][0]),hints:s.st[i][1].map(fx),done:false,stay:true};
+ const c=check(text),nx=s.st[i+1];
+ return{kind:c?c.kind:'great',better:c?c.better:'',tip:c?c.tip:'',praise:'',reply:fx(nx?nx[0]:s.bye),hints:nx?nx[1].map(fx):[],done:!nx};
+}
+
+/* ---------- AI turn (live chat) ---------- */
+function prompt(text){
+ const s=scn(),bot=BOT[S.av];
+ const hist=S.log.filter(e=>e.t==='bot'||e.t==='me').slice(-14).map(e=>(e.t==='bot'?bot:'Learner')+': '+e.x).join('\n');
+ const steps=s.st.map((x,i)=>`${i+1}. ${fx(x[0])}`).join('\n');
+ return `You are ${bot}, a friendly Omani English teacher character in a speaking-practice game for Omani learners of English. ${S.av==='f'?'You are an Omani lady wearing a black abaya and a black shayla.':'You are an Omani man with a neat beard, wearing a white Omani dishdasha and a '+(S.hat==='kumma'?'kumma cap':'massar')+'.'}
+Situation: ${s.t} (${s.s}). You play ${s.r}. The learner plays ${s.y}. The learner's name is ${nm()}. The learner is ${LV[S.level].g}
+Usual steps of this role-play (follow them loosely, one step per reply):
+${steps}
+When the situation is complete, finish with something like: "${fx(s.bye)}"
+Rules:
+- Stay in the role-play and use simple, natural, everyday English. Your "reply" is 1 or 2 short sentences (under 30 words) and ends with a question or a clear prompt, unless the situation is finished. Places are in Oman and prices are in Omani rials.
+- Tone: warm, calm, kind, patient and motivating, like a teacher who really enjoys helping this learner.
+- Strict content rules: never mention or discuss religion, romance, dating, boyfriends or girlfriends, anything sexual, alcohol, pork, gambling, drugs or politics, or anything against Islamic values or Omani culture. All food and drinks are halal (for example tea, karak, coffee, juice, chicken, fish, rice). If the learner brings up any of these, do not discuss it; kindly steer back to the situation.
+- If the learner asks what a word means or asks for help, explain very simply in the reply, then continue.
+- Check only the learner's LAST message. Ignore capital letters, punctuation and small typos. Short natural answers like "Two, please." are fine.
+  kind "great" = correct and natural. kind "upgrade" = correct but there is a more natural or polite way. kind "fix" = a real grammar or vocabulary mistake. If the learner wrote in Arabic or another language, use "fix" and put the English sentence in "better".
+- "better": the learner's sentence corrected, keeping their meaning; "" when kind is "great". "tip": one short, friendly reason (under 14 words); "" when kind is "great".
+- "praise": 2 to 6 warm words, varied, sometimes with the learner's name.
+- "hints": 2 short example answers the learner could say next, at their level.
+- "done": true only when the situation has reached its natural end (then the reply is a kind goodbye with no question).${S.turn>=s.st.length+2?'\n- It is time to finish: wrap up the situation in this reply and set "done" to true.':''}
+Conversation so far:
+${hist}
+Learner's last message: "${text.replace(/"/g,"'")}"
+Answer with JSON only, no markdown:
+{"kind":"great","better":"","tip":"","praise":"","reply":"","hints":["",""],"done":false}`;
+}
+function clean(j){
+ const s=scn(),str=(v,n)=>typeof v==='string'?v.trim().slice(0,n):'';
+ let kind=['great','upgrade','fix'].includes(j.kind)?j.kind:'great';
+ let reply=str(j.reply,400);const nx=s.st[Math.min(S.turn+1,s.st.length-1)];
+ if(!reply||BANNED.test(reply))reply=fx(nx[0]);
+ const hints=Array.isArray(j.hints)?j.hints.map(h=>str(h,90)).filter(h=>h&&!BANNED.test(h)).slice(0,3):[];
+ let better=kind==='great'?'':str(j.better,200);if(BANNED.test(better))better='';
+ if(kind==='upgrade'&&!better)kind='great';
+ return{kind,better,tip:kind==='great'?'':str(j.tip,140),praise:str(j.praise,60),reply,hints,done:j.done===true};
+}
+async function askAI(text){
+ const ac=new AbortController(),to=setTimeout(()=>ac.abort(),25000);
+ try{const res=await sample(prompt(text),{modelTier:'default',cache:false,signal:ac.signal});
+  const t=(res&&res.text)||'',a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<=a)throw new Error('format');
+  return clean(JSON.parse(t.slice(a,b+1)))}finally{clearTimeout(to)}
+}
+
+/* ---------- rendering ---------- */
+function show(id){['pick','scene','chat'].forEach(s=>{$('#'+s).hidden=s!==id});S.screen=id;$('#homeBtn').hidden=id==='pick';if(id!=='chat')$('#win').hidden=true}
+function seg(sel,v){document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)))}
+function pickState(){document.querySelectorAll('.av').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.av===S.av)));$('#hatFld').hidden=S.av!=='m';$('#capM').textContent='Omani man · dishdasha and '+(S.hat==='kumma'?'kumma cap':'massar');seg('#lvlSeg',S.level);seg('#hatSeg',S.hat)}
+function drawPick(){$('#picF').innerHTML=sceneSVG('pf')+robotSVG('f','','rf');$('#picM').innerHTML=sceneSVG('pm')+robotSVG('m',S.hat,'rm');$('#nameIn').value=S.name;pickState()}
+function drawScenes(){$('#sceneHead').innerHTML=robotSVG(S.av,S.hat,'rh',true);$('#sceneSay').textContent=`Lovely to meet you, ${nm()}! Where shall we practise today?`;
+ $('#scGrid').innerHTML=SC.map((s,i)=>`<button class="sc" type="button" data-i="${i}"><i style="background:${s.c}">${ic(s.ic)}</i><b>${esc(s.t)}</b><small>${esc(s.s)}</small>${S.done.includes(s.id)?`<span class="ok" title="Completed">${ic('check')}</span>`:''}</button>`).join('')}
+function modeTag(){const t=$('#modeTag');const live=!!sample&&!aiOff;t.textContent=live?'AI chat':'Practice';t.classList.toggle('off',!live);t.title=live?'Live AI conversation and corrections':'Built-in conversation and corrections'}
+function drawStage(){const s=scn();$('#stageBot').innerHTML=robotSVG(S.av,S.hat,'rs');$('#roleTag').textContent=s.tag?fx(s.tag):`${BOT[S.av]} is ${s.r} · you are ${s.y}`;$('#scTitle').textContent=s.t;modeTag();voiceLabel()}
+function row(e,i){
+ if(e.t==='bot')return `<div class="m bot"><div class="who">${BOT[S.av]}<button type="button" data-say="${i}" aria-label="Listen again">${ic('spk')}</button></div>${esc(e.x)}</div>`;
+ if(e.t==='me')return `<div class="m me">${esc(e.x)}</div>`;
+ if(e.t==='note')return `<div class="note">${esc(e.x)}</div>`;
+ if(e.t==='tip')return `<div class="tipbox">${ic('spark')}<span>${esc(e.x)}</span></div>`;
+ if(e.k==='great')return `<div class="fb great">${ic('star','fill')} +${e.p} · ${esc(e.pr)}</div>`;
+ return `<div class="fb ${e.k}"><h4>${ic(e.k==='fix'?'pencil':'spark')} ${esc(e.pr)} <small>+${e.p} star${e.p>1?'s':''}</small></h4>${e.b?`<div class="lb">${e.k==='fix'?"Let's fix it together:":'Even more natural:'}</div><div class="bt">${esc(e.b)}</div>`:''}${e.tip?`<div class="tip">${esc(e.tip)}</div>`:''}${e.b?`<div class="acts"><button class="tb" type="button" data-pr="${i}">Practise it</button><button class="tb" type="button" data-hb="${i}">${ic('spk')} Listen</button></div>`:''}</div>`;
+}
+function renderAll(){
+ const L=$('#log');L.innerHTML=S.log.map(row).join('')+(busy?`<div class="m bot typing" aria-label="${BOT[S.av]} is thinking"><span></span><span></span><span></span></div>`:'');L.scrollTop=L.scrollHeight;
+ $('#hints').innerHTML=S.over||!S.hints.length?'':'<span>Ideas:</span>'+S.hints.map((h,i)=>`<button type="button" data-h="${i}">${esc(h)}</button>`).join('');
+ const n=scn().st.length,k=S.over?n:Math.min(S.turn,n);$('#dots').innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<k?'on':''}"></i>`).join('');
+ $('#retry').hidden=!S.retry;if(S.retry)$('#retryT').textContent=S.retry;
+ $('#starN').textContent=S.stars;
+}
+const push=e=>S.log.push(e);
+
+/* ---------- game flow ---------- */
+function startScene(i){const s=SC[i];Object.assign(S,{sc:s.id,log:[],turn:0,round:0,streak:0,phr:[],over:false,retry:null});busy=false;show('chat');drawStage();
+ const q=fx(s.st[0][0]);S.hints=s.st[0][1].map(fx);nudged=false;push({t:'bot',x:q});renderAll();speak(q).then(afterSpeak)}
+async function send(raw){
+ const text=String(raw||'').trim().slice(0,300);if(!text||busy||S.over)return;
+ if(listening)stopListen(false);hush();clearTimeout(nudgeT);$('#micBtn').classList.remove('wait');dBase='';$('#inp').value='';push({t:'me',x:text});
+ if(S.retry){const tg=S.retry;S.retry=null;if(near(text,tg)){S.stars++;S.round++;push({t:'note',x:`Perfect, ${nm()}! +1 star`});renderAll();speak(`Perfect, ${nm()}! Well done.`).then(afterSpeak)}else{S.retry=tg;push({t:'note',x:'Nearly! Listen and try once more.'});renderAll();speak(tg).then(afterSpeak)}save();return}
+ if(BANNED.test(text)){const s=scn(),q=[...S.log].reverse().find(e=>e.t==='bot');const x=`Let's keep our English chat about ${s.topic} today, ${nm()}. ${q?q.x:''}`.trim();push({t:'bot',x});renderAll();speak(x).then(afterSpeak);return}
+ busy=true;renderAll();thinking(true);
+ let r=null;
+ if(sample&&!aiOff){try{r=await askAI(text)}catch(e){if(e&&e.code==='not_granted'){aiOff=true;modeTag()}r=null}}
+ if(!r)r=localTurn(text);
+ busy=false;thinking(false);apply(r);
+}
+function apply(r){
+ const pts=r.kind==='great'?3:r.kind==='upgrade'?2:1,pr=r.praise||pick(PR[r.kind]);
+ S.streak=r.kind==='great'?S.streak+1:0;S.stars+=pts;S.round+=pts;
+ push({t:'fb',k:r.kind,b:r.better||'',tip:r.tip||'',pr,p:pts});
+ if(S.streak>=3&&S.streak%3===0)push({t:'note',x:`${S.streak} great answers in a row!`});
+ if(r.better&&!S.phr.includes(r.better))S.phr.push(r.better);
+ if(!r.stay)S.turn++;
+ nudged=false;
+ push({t:'bot',x:r.reply});
+ const s=scn(),st=s.st[Math.min(S.turn,s.st.length-1)];
+ S.hints=r.hints&&r.hints.length?r.hints:(r.done?[]:st[1].map(fx));
+ if(r.done){S.over=true;if(!S.done.includes(S.sc))S.done.push(S.sc);S.stars+=5;S.round+=5}
+ renderAll();save();
+ const say=(r.kind!=='great'&&r.better?`${pr} We can say: ${r.better} `:`${pr} `)+r.reply;speak(say).then(()=>{if(!r.done)afterSpeak()});
+ if(r.done)setTimeout(showWin,Math.min(dur(say)+900,9500));
+}
+function showWin(){if(S.screen!=='chat'||!S.over)return;const s=scn();$('#wT').textContent=`Well done, ${nm()}!`;$('#wP').textContent=`You finished “${s.t}” and earned ${S.round} stars, including a 5-star bonus.`;
+ const L=[...S.phr.map(p=>({p,c:1})),...s.st.map(x=>({p:fx(x[1][0])}))].slice(0,8);
+ $('#wL').innerHTML=L.map(x=>`<li>${x.c?'<small>Your corrected sentence</small>':''}${esc(x.p)}</li>`).join('');$('#win').hidden=false;$('#wNext').focus()}
+
+/* ---------- events ---------- */
+$('#sndBtn').addEventListener('click',()=>{S.sound=!S.sound;if(!S.sound)hush();sndIcon();voiceLabel();save()});
+function sndIcon(){$('#sndBtn').innerHTML=ic(S.sound?'spk':'spkOff');$('#sndBtn').setAttribute('aria-label',S.sound?'Sound on':'Sound off')}
+$('#homeBtn').addEventListener('click',()=>{leave();show('pick');drawPick()});
+$('#backBtn').addEventListener('click',()=>{leave();show('scene');drawScenes()});
+document.querySelectorAll('.av').forEach(b=>b.addEventListener('click',()=>{S.av=b.dataset.av;save();pickState();document.querySelectorAll('.cap .hi').forEach(h=>h.textContent='');const g=`Hello! I'm ${BOT[S.av]}. Let's practise English together!`;b.querySelector('.hi').textContent=g;speak(g)}));
+$('#lvlSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.level=b.dataset.v;seg('#lvlSeg',S.level);save()});
+$('#hatSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.hat=b.dataset.v;$('#picM').innerHTML=sceneSVG('pm')+robotSVG('m',S.hat,'rm');pickState();save()});
+$('#nameIn').addEventListener('input',e=>{S.name=e.target.value.slice(0,24);save()});
+$('#goBtn').addEventListener('click',()=>{show('scene');drawScenes();speak($('#sceneSay').textContent)});
+$('#scGrid').addEventListener('click',e=>{const b=e.target.closest('.sc');if(b)startScene(+b.dataset.i)});
+$('#ask').addEventListener('submit',e=>{e.preventDefault();if(listening){stopListen(true);return}lastVia='text';send($('#inp').value)});
+$('#inp').addEventListener('input',()=>{clearTimeout(nudgeT);$('#micBtn').classList.remove('wait')});
+$('#hints').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('#inp').value=S.hints[+b.dataset.h]||'';$('#inp').focus()});
+$('#log').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.say!=null)speak(S.log[+d.say].x);
+ else if(d.hb!=null)speak(S.log[+d.hb].b);
+ else if(d.pr!=null){S.retry=S.log[+d.pr].b;renderAll();speak(S.retry).then(afterSpeak)}});
+$('#retrySkip').addEventListener('click',()=>{S.retry=null;renderAll()});
+$('#voiceBtn').addEventListener('click',()=>{const n=(tts?VO:bList()).length;if(!n)return;S.vi[S.av]=(vIdx()+1)%n;save();voiceLabel();speak(`Hello, I'm ${BOT[S.av]}. Do you like this voice?`)});
+$('#micBtn').addEventListener('click',()=>{if(listening){stopListen(true);return}listen(false)});
+$('#wNext').addEventListener('click',()=>{$('#win').hidden=true;leave();show('scene');drawScenes()});
+$('#wAgain').addEventListener('click',()=>{$('#win').hidden=true;startScene(SC.findIndex(s=>s.id===S.sc))});
+$('#backBtn').innerHTML=ic('back');$('#homeBtn').innerHTML=ic('home');$('#micBtn').innerHTML=ic('mic');$('#sendBtn').innerHTML=ic('send');
+
+/* ---------- boot ---------- */
+let booted=false;
+function boot(d){if(booted)return;booted=true;load();if(d&&typeof d==='object'&&d.screen)Object.assign(S,d);
+ $('#stageBg').innerHTML=sceneSVG('sb');drawPick();sndIcon();$('#starN').textContent=S.stars;
+ if(S.screen==='chat'&&S.sc&&S.log.length){show('chat');drawStage();renderAll()}
+ else if(S.screen==='scene'){show('scene');drawScenes()}else show('pick');
+ if(S.over&&S.screen==='chat')showWin()}
+try{const h=window.claude&&window.claude.hot;if(h&&h.snapshot)h.snapshot(()=>JSON.parse(JSON.stringify(S)));if(h&&h.ready)h.ready(boot);else boot(h&&h.data||{})}catch(e){boot({})}
+}
+</script>
+</body>
+</html>
