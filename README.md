@@ -12,6 +12,16 @@ English Majlis is an installable web app. It works on phones, tablets and comput
 - **iPhone / iPad (Safari):** open the link, tap **Share**, then **Add to Home Screen**.
 - **Windows / Mac / Chromebook (Chrome or Edge):** open the link and click the install icon in the address bar.
 
+## Android app (phones, tablets and smart TVs)
+
+Every time the game files change, GitHub builds a real Android app automatically (see `.github/workflows/android.yml`).
+Download **EnglishMajlis.apk** from this repository's **Releases** page:
+https://github.com/AminaQatan/English-Majlis-App/releases/latest
+
+- **Android phone or tablet:** open the APK file and allow "Install unknown apps" when asked. English Majlis then appears in the app list with its own icon.
+- **Android TV / Google TV (for example Sony):** copy the APK to the TV (with a USB stick and a file manager, or an app such as *Send files to TV*), allow installing unknown apps for that file manager, and install it. It appears on the TV home screen with its own banner. Use the remote's arrows and OK button to play.
+- The app has the game built in, so it works offline, uses the device's own voice, and listens through the device microphone.
+
 ## How to play
 
 1. Choose your friend: **Muzna** (black abaya and shayla) or **Hamed** (white dishdasha with a kumma cap or a massar).
@@ -47,6 +57,8 @@ Meet & greet · Restaurant · Hotel · Bus tickets · Airport · Clothes shop ·
 | `manifest.webmanifest` | App name, colours and icons |
 | `words.txt` | Word list for spelling corrections |
 | `sw.js` | Offline support |
+| `android/` | The Android app project (phones, tablets, TV) |
+| `.github/workflows/android.yml` | Builds the Android app on GitHub |
 | `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png` | App icons |
 
 ---

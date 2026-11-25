@@ -33,6 +33,8 @@ body{background:var(--sea);color:#f4fbfa;font:16px/1.5 Nunito,system-ui,sans-ser
 button,input{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--sand);outline-offset:2px}
+.tv :focus{outline:4px solid var(--sand)!important;outline-offset:3px}
+.tv .av:focus,.tv .sc:focus{transform:scale(1.03)}
 [hidden]{display:none!important}
 svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 svg.i.fill{fill:currentColor;stroke:none}
@@ -330,6 +332,11 @@ const pick=a=>fx(a[Math.floor(Math.random()*a.length)]);
 
 /* ---------- capabilities ---------- */
 let sample=null,tts=null,dict=null,aiOff=false,listening=false,dBase='',busy=false;
+/* Android app bridge (only present inside the installed Android / TV app) */
+const AA=window.AndroidApp||null,isTV=!!(AA&&AA.isTv&&AA.isTv());
+const aaWait={};let aaRec=false,aaIgnore=false;
+window.__androidTTS=(ev,id)=>{if(ev==='done'||ev==='error'){const f=aaWait[id];delete aaWait[id];if(f)f()}};
+function aaList(){try{return AA?JSON.parse(AA.voices(S.accent==='us'?'en-US':'en-GB',S.av==='f'?'female':'male'))||[]:[]}catch(e){return[]}}
 const use=n=>{try{return window.claude&&window.claude.use?Promise.resolve(window.claude.use(n)).catch(()=>null):Promise.resolve(null)}catch(e){return Promise.resolve(null)}};
 use('sample').then(s=>{sample=s;modeTag()});
 use('tts').then(t=>{tts=t;if(t&&t.onState)t.onState(o=>talk(o&&o.state==='speaking'));voiceLabel()});
@@ -422,8 +429,9 @@ function vScore(v){const n=v.name||'',l=(v.lang||'').replace('_','-');let s=0;
  if(S.accent==='us'?/en-US/i.test(l):/en-GB/i.test(l))s+=40;else if(/en-(US|GB)/i.test(l))s+=8;
  const fe=FEM.test(n),ma=MAL.test(n)&&!fe;if(S.av==='f'?fe:ma)s+=25;else if(S.av==='f'?ma:fe)s-=40;return s}
 function bList(){try{return window.speechSynthesis?speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)&&!NOVELTY.test(v.name)).sort((a,b)=>vScore(b)-vScore(a)):[]}catch(e){return[]}}
-function vIdx(){const n=(tts?VO:bList()).length;let i=S.vi[S.av];if(i==null||i<0||i>=n)i=tts?(S.av==='f'?1:3):0;return i}
-function voiceLabel(){const b=$('#voiceBtn');if(!b)return;const list=tts?VO:bList();b.hidden=!S.sound||!list.length;if(!list.length)return;const v=list[vIdx()];const n=tts?v[0].toUpperCase()+v.slice(1):String(v.name||'').split(/[\s(]/)[0];b.textContent='Voice';b.title='Voice: '+n+' (tap to change)'}
+const vList=()=>tts?VO:AA?aaList():bList();
+function vIdx(){const n=vList().length;let i=S.vi[S.av];if(i==null||i<0||i>=n)i=tts?(S.av==='f'?1:3):0;return i}
+function voiceLabel(){const b=$('#voiceBtn');if(!b)return;const list=vList();b.hidden=!S.sound||!list.length;if(!list.length)return;const v=list[vIdx()];const n=tts?v[0].toUpperCase()+v.slice(1):AA?'voice '+(vIdx()+1)+' of '+list.length:String(v.name||'').split(/[\s(]/)[0];b.textContent='Voice';b.title='Voice: '+n+' (tap to change)'}
 try{if(window.speechSynthesis)speechSynthesis.onvoiceschanged=voiceLabel}catch(e){}
 const dur=t=>Math.min(9000,Math.max(1200,String(t).split(/\s+/).length*340/LV[S.level].rate));
 let sTok=0,shownVoice=false,unlocked=false;
@@ -434,6 +442,7 @@ function speak(text,slow){return new Promise(res=>{
  const go=()=>{
   if(tok!==sTok){fin();return}
   if(!S.sound){fake();return}
+  if(AA){const run=n=>{let ok=false;try{ok=AA.canSpeak()}catch(e){}if(!ok){if(n<3){setTimeout(()=>run(n+1),600);return}noVoice();fake();return}const id='u'+tok;aaWait[id]=fin;talk(true,ms+4000);try{const L=aaList();AA.speak(String(text),S.accent==='us'?'en-US':'en-GB',rate,L.length?L[vIdx()]:'',id)}catch(e){delete aaWait[id];fake()}setTimeout(fin,ms*2+6000)};run(0);return}
   if(tts){talk(true,ms+4000);const say=(lang,again)=>tts.speak(String(text).slice(0,1900),{voice:VO[vIdx()],rate,language:lang}).then(fin).catch(e=>{const c=e&&e.code;if(again&&!['not_granted','busy','rate_limited','viewer_stopped'].includes(c)){say('en',false);return}if(c==='not_granted'){tts=null;voiceLabel()}fake()});say(S.accent==='us'?'en-US':'en-GB',true);return}
   const ss=window.speechSynthesis;
   if(ss&&window.SpeechSynthesisUtterance){try{ss.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=rate;const v=bList()[vIdx()];if(v){u.voice=v;u.lang=v.lang}let st=false;u.onstart=()=>{st=true};u.onend=fin;u.onerror=fin;talk(true,ms+4000);ss.speak(u);
@@ -443,7 +452,7 @@ function speak(text,slow){return new Promise(res=>{
  if(listening)stopListen(false).then(go);else go();
 })}
 const inClaude=!!(window.claude&&window.claude.use);
-function noVoice(){if(shownVoice||S.screen!=='chat')return;shownVoice=true;push({t:'tip',x:inClaude?"My voice can't play in this app, so please read my messages for now. To hear me talk, open this game in a web browser such as Chrome, or in the Claude desktop app.":"My voice can't play in this browser, so please read my messages for now. Try Chrome or Safari, and check that your sound is on."});renderAll()}
+function noVoice(){if(shownVoice||S.screen!=='chat')return;shownVoice=true;push({t:'tip',x:AA?"My voice can't play yet. Please turn up the volume, and check that a text-to-speech engine (for example Speech Services by Google) is installed on this device.":inClaude?"My voice can't play in this app, so please read my messages for now. To hear me talk, open this game in a web browser such as Chrome, or in the Claude desktop app.":"My voice can't play in this browser, so please read my messages for now. Try Chrome or Safari, and check that your sound is on."});renderAll()}
 addEventListener('pointerdown',()=>{if(unlocked)return;unlocked=true;try{if(!tts&&window.speechSynthesis&&window.SpeechSynthesisUtterance){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}}catch(e){}},{capture:true});
 
 /* ---------- listening (mic) ---------- */
@@ -452,11 +461,12 @@ let sr=null,webSR=!!SR,silT=0,lastVia='text',helped=false,nudgeT=0,nudged=false;
 function setListening(on){listening=!!on;const m=$('#micBtn'),i=$('#inp');m.classList.toggle('on',listening);m.classList.remove('wait');m.setAttribute('aria-label',listening?'Stop and send':'Speak your answer');i.classList.toggle('lis',listening);i.placeholder=listening?'Listening… speak now':'Type or speak your answer';if(listening)clearTimeout(nudgeT)}
 function bumpSilence(){clearTimeout(silT);silT=setTimeout(()=>{if(listening)stopListen(true)},1800)}
 function micWait(){$('#micBtn').classList.add('wait');$('#inp').placeholder='Tap the mic to answer, or type'}
-function micHelp(){$('#inp').focus();if(helped)return;helped=true;push({t:'tip',x:inClaude?"The microphone can't be used inside this app. You can still speak: tap the microphone on your phone's keyboard, then press send. To talk hands-free, open this game in Chrome on a computer or Android phone, or in the Claude desktop app.":"The microphone isn't working here. Please allow microphone access for this page, or use Chrome or Safari. You can also tap the microphone on your phone's keyboard, then press send."});renderAll()}
+function micHelp(){$('#inp').focus();if(helped)return;helped=true;push({t:'tip',x:AA?"The microphone isn't available. Please allow microphone access for English Majlis in your device settings. You can also type, or use the microphone on your keyboard.":inClaude?"The microphone can't be used inside this app. You can still speak: tap the microphone on your phone's keyboard, then press send. To talk hands-free, open this game in Chrome on a computer or Android phone, or in the Claude desktop app.":"The microphone isn't working here. Please allow microphone access for this page, or use Chrome or Safari. You can also tap the microphone on your phone's keyboard, then press send."});renderAll()}
 function micFail(e,auto){setListening(false);const c=e&&e.code;if(c==='not_granted'){dict=null;if(!auto)micHelp();return}if(auto||c==='dismissed')micWait();else micHelp()}
 function listen(auto){
  if(busy||S.over||listening||S.screen!=='chat')return;
  clearTimeout(nudgeT);dBase=$('#inp').value.trim();
+ if(AA&&AA.canListen&&AA.canListen()){hush();aaRec=true;aaIgnore=false;try{AA.listen(S.accent==='us'?'en-US':'en-GB')}catch(e){aaRec=false;micHelp()}return}
  if(dict){hush();let pr;try{pr=dict.start()}catch(e){pr=Promise.reject(e)}Promise.resolve(pr).catch(e=>micFail(e,auto));clearTimeout(silT);silT=setTimeout(()=>{if(listening&&!$('#inp').value.trim())stopListen(false)},9000);return}
  if(webSR){try{hush();sr=new SR();sr.lang='en-GB';sr.interimResults=true;sr.continuous=false;
   sr.onresult=ev=>{let t='';for(let i=0;i<ev.results.length;i++)t+=ev.results[i][0].transcript;$('#inp').value=(dBase+' '+t).trim()};
@@ -467,14 +477,20 @@ function listen(auto){
  if(auto)micWait();else micHelp();
 }
 async function stopListen(andSend){clearTimeout(silT);
+ if(aaRec){aaIgnore=!andSend;try{AA.stopListen()}catch(e){}if(!andSend){aaRec=false;setListening(false)}else setTimeout(()=>{if(listening){setListening(false);aaRec=false;finishListen()}},2500);return}
  if(sr){const x=sr;if(!andSend)x.onend=()=>{setListening(false);sr=null};try{x.stop()}catch(e){setListening(false);sr=null}return}
  if(dict&&listening){try{await dict.stop()}catch(e){}}
  setListening(false);if(andSend)finishListen()}
+window.__androidSR=(type,text)=>{text=text||'';
+ if(type==='start'){setListening(true);return}
+ if(type==='partial'){if(!aaIgnore)$('#inp').value=(dBase+' '+text).trim();return}
+ if(type==='final'){const ig=aaIgnore;aaRec=false;aaIgnore=false;setListening(false);if(ig)return;$('#inp').value=(dBase+' '+text).trim();finishListen();return}
+ if(type==='error'){aaRec=false;setListening(false);if(text==='denied'||text==='9')micHelp();else if(text==='6'||text==='7'){$('#inp').placeholder="I didn't hear you. Tap the mic and try again.";$('#micBtn').classList.add('wait')}}};
 function finishListen(){const t=$('#inp').value.trim();if(!t)return;lastVia='voice';send(t)}
 function armNudge(){clearTimeout(nudgeT);nudgeT=setTimeout(()=>{if(S.screen!=='chat'||S.over||busy||listening||nudged||$('#inp').value.trim()||!S.hints.length)return;nudged=true;const x=`Take your time, ${nm()}. You could say: "${S.hints[0]}"`;push({t:'bot',x});renderAll();speak(x).then(afterSpeak)},25000)}
 function afterSpeak(){if(S.screen!=='chat'||S.over||busy)return;if(lastVia==='voice')listen(true);armNudge()}
 function leave(){hush();if(listening)stopListen(false);clearTimeout(nudgeT);$('#micBtn').classList.remove('wait')}
-function hush(){sTok++;try{if(tts&&tts.stop)tts.stop()}catch(e){}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}talk(false)}
+function hush(){sTok++;try{if(AA)AA.stopSpeak()}catch(e){}try{if(tts&&tts.stop)tts.stop()}catch(e){}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}talk(false)}
 
 /* ---------- local English checker (used in practice mode) ---------- */
 const BASE={got:'get',met:'meet',went:'go',ate:'eat',saw:'see',came:'come',took:'take',bought:'buy',had:'have',made:'make',gave:'give',did:'do',booking:'book',ordering:'order',buying:'buy',going:'go',having:'have',making:'make',travelling:'travel',traveling:'travel',reserving:'reserve',paying:'pay',asking:'ask'};
@@ -830,13 +846,23 @@ $('#log').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)
  else if(d.hb!=null)speak(S.log[+d.hb].b);
  else if(d.pr!=null){S.retry=S.log[+d.pr].b;renderAll();speak(S.retry).then(afterSpeak)}});
 $('#retrySkip').addEventListener('click',()=>{S.retry=null;renderAll()});
-$('#voiceBtn').addEventListener('click',()=>{const n=(tts?VO:bList()).length;if(!n)return;S.vi[S.av]=(vIdx()+1)%n;save();voiceLabel();speak(`Hello, I'm ${BOT[S.av]}. Do you like this voice?`)});
+$('#voiceBtn').addEventListener('click',()=>{const n=vList().length;if(!n)return;S.vi[S.av]=(vIdx()+1)%n;save();voiceLabel();speak(`Hello, I'm ${BOT[S.av]}. Do you like this voice?`)});
 $('#micBtn').addEventListener('click',()=>{if(listening){stopListen(true);return}listen(false)});
 $('#wNext').addEventListener('click',()=>{$('#win').hidden=true;leave();show('scene');drawScenes()});
 $('#wAgain').addEventListener('click',()=>{$('#win').hidden=true;startScene(SC.findIndex(s=>s.id===S.sc))});
 $('#backBtn').innerHTML=ic('back');$('#homeBtn').innerHTML=ic('home');$('#micBtn').innerHTML=ic('mic');$('#sendBtn').innerHTML=ic('send');
 
 /* ---------- boot ---------- */
+/* Android app: back button and TV remote (arrow keys move between buttons) */
+window.__androidBack=()=>{if(!$('#win').hidden){$('#win').hidden=true;return true}if(S.screen==='chat'){leave();show('scene');drawScenes();return true}if(S.screen==='scene'){show('pick');drawPick();return true}return false};
+if(isTV){document.documentElement.classList.add('tv');
+ addEventListener('keydown',e=>{const k={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(!k)return;const a=document.activeElement;if(a&&a.tagName==='INPUT'&&k[1]===0&&a.value)return;
+  const els=[...document.querySelectorAll('button,input')].filter(x=>!x.closest('[hidden]')&&!x.disabled&&x.getClientRects().length);if(!els.length)return;
+  if(!a||!els.includes(a)){els[0].focus();e.preventDefault();return}
+  const r=a.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let best=null,bd=1e9;
+  for(const x of els){if(x===a)continue;const q=x.getBoundingClientRect(),dx=q.left+q.width/2-cx,dy=q.top+q.height/2-cy,along=dx*k[0]+dy*k[1];if(along<=4)continue;const d=along+Math.abs(dx*k[1]+dy*k[0])*2;if(d<bd){bd=d;best=x}}
+  if(best){best.focus();best.scrollIntoView({block:'nearest',inline:'nearest'});e.preventDefault()}});
+ setTimeout(()=>{const f=document.querySelector('.av');if(f)f.focus()},400)}
 let booted=false;
 function boot(d){if(booted)return;booted=true;load();if(d&&typeof d==='object'&&d.screen)Object.assign(S,d);
  $('#stageBg').innerHTML=sceneSVG('sb');drawPick();sndIcon();$('#starN').textContent=S.stars;
@@ -845,7 +871,7 @@ function boot(d){if(booted)return;booted=true;load();if(d&&typeof d==='object'&&
  if(S.over&&S.screen==='chat')showWin()}
 /* ---------- app install (works when hosted on a website such as GitHub Pages) ---------- */
 if(!inClaude){
- try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
+ try{if(!AA&&'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
  const standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
  let deferred=null;
  if(!standalone){
