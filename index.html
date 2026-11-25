@@ -186,6 +186,7 @@ input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px color-mix
         <div class="setup">
           <label class="fld"><span>Your name</span><input id="nameIn" maxlength="24" placeholder="e.g. Aisha" autocomplete="given-name"></label>
           <div class="fld"><span>Your level</span><div class="seg" id="lvlSeg"><button type="button" data-v="Beginner">Beginner</button><button type="button" data-v="Intermediate">Intermediate</button><button type="button" data-v="Advanced">Advanced</button></div></div>
+          <div class="fld"><span>Accent</span><div class="seg" id="accSeg"><button type="button" data-v="uk">British</button><button type="button" data-v="us">American</button></div></div>
           <div class="fld" id="hatFld"><span>Hamed wears</span><div class="seg" id="hatSeg"><button type="button" data-v="kumma">Kumma cap</button><button type="button" data-v="massar">Massar (amama)</button></div></div>
           <button class="go" id="goBtn" type="button">Start talking <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
@@ -310,7 +311,7 @@ const SC=[
    ["It's about ten minutes on foot. Shall I show you on the map?",["Yes, please. That would be great.","No, thanks. I can find it."]]],
   bye:"No problem! Enjoy your visit, {name}."}
 ];
-const LV={Beginner:{rate:.85,g:'beginner (A1 to A2): use very short, simple sentences and common words. Be forgiving and only fix clear mistakes that matter.'},
+const LV={Beginner:{rate:.9,g:'beginner (A1 to A2): use very short, simple sentences and common words. Be forgiving and only fix clear mistakes that matter.'},
  Intermediate:{rate:.95,g:'intermediate (B1): use clear everyday sentences and bring in a useful new phrase now and then.'},
  Advanced:{rate:1,g:'advanced (B2 to C1): speak naturally with polite, idiomatic phrases, and also point out wording that is correct but unnatural.'}};
 const BOT={f:'Muzna',m:'Hamed'};
@@ -318,12 +319,12 @@ const BANNED=/\b(sex|sexy|sexual|boyfriends?|girlfriends?|dating|kiss(es|ing)?|w
 const PR={great:['Excellent, {name}!','Great job!','Well said!','Perfect English!','Super, {name}!','Lovely answer!'],upgrade:['Good, {name}!','Nice one!','Well done!'],fix:['Good try, {name}!','Nice effort!','Almost there, {name}!']};
 
 /* ---------- state ---------- */
-const S={screen:'pick',av:'f',hat:'kumma',name:'',level:'Beginner',sound:true,stars:0,done:[],vi:{f:-1,m:-1},sc:null,log:[],turn:0,round:0,streak:0,phr:[],hints:[],over:false,retry:null};
+const S={screen:'pick',av:'f',hat:'kumma',name:'',level:'Beginner',sound:true,accent:'uk',stars:0,done:[],vi:{f:-1,m:-1},sc:null,log:[],turn:0,round:0,streak:0,phr:[],hints:[],over:false,retry:null};
 const KEY='english-majlis-v1';
-function save(){try{localStorage.setItem(KEY,JSON.stringify({av:S.av,hat:S.hat,name:S.name,level:S.level,sound:S.sound,stars:S.stars,done:S.done,vi:S.vi}))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({av:S.av,hat:S.hat,name:S.name,level:S.level,accent:S.accent,sound:S.sound,stars:S.stars,done:S.done,vi:S.vi}))}catch(e){}}
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&typeof d==='object')Object.assign(S,d)}catch(e){}}
 const nm=()=>S.name.trim()||'friend';
-const fx=t=>String(t).replace(/\{name\}/g,nm()).replace(/\{nm\}/g,S.name.trim()||'Ali').replace(/\{bot\}/g,BOT[S.av]);
+const fx=t=>{let x=String(t).replace(/\{name\}/g,nm()).replace(/\{nm\}/g,S.name.trim()||'Ali').replace(/\{bot\}/g,BOT[S.av]);if(S.accent==='us')x=x.replace(/colour/g,'color').replace(/favourite/g,'favorite').replace(/practise/g,'practice');return x};
 const scn=()=>SC.find(s=>s.id===S.sc)||SC[0];
 const pick=a=>fx(a[Math.floor(Math.random()*a.length)]);
 
@@ -413,9 +414,15 @@ function thinking(on){document.querySelectorAll('#stageBot .robot').forEach(r=>r
 
 /* ---------- voice ---------- */
 const VO=['buttery','airy','glassy','rounded'];
-const FEM=/female|samantha|victoria|karen|moira|tessa|serena|zira|susan|fiona|kate|libby|sonia|hazel|aria|jenny|allison|ava/i,MAL=/male|daniel|alex\b|fred|oliver|david|george|rishi|aaron|arthur|guy|ryan|thomas/i;
-function bList(){try{return window.speechSynthesis?speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)):[]}catch(e){return[]}}
-function vIdx(){const list=tts?VO:bList(),n=list.length;let i=S.vi[S.av];if(i==null||i<0||i>=n){if(tts)i=S.av==='f'?1:3;else{const f=S.av==='f';i=list.findIndex(v=>f?FEM.test(v.name):(MAL.test(v.name)&&!/female/i.test(v.name)));if(i<0)i=0}}return i}
+const FEM=/female|samantha|victoria|karen|moira|tessa|serena|zira|susan|fiona|kate|libby|sonia|hazel|aria|jenny|allison|ava\b|zoe|joelle|nicky|stephanie|martha|emma|michelle|clara|maisie|amy|salli|joanna|kendra|kimberly|ivy|olivia|ruth|google us english/i,
+ MAL=/\bmale|daniel|alex\b|oliver|david|george|rishi|aaron|arthur|guy|ryan|thomas|christopher|eric|andrew|brian|davis|tony|jason|roger|matthew|joey|justin|kevin|liam|william|james|evan|tom\b|gordon|lee\b/i,
+ NOVELTY=/albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|kathy|fred|grandma|grandpa|eddy|flo\b|reed|rocko|sandy|shelley/i;
+function vScore(v){const n=v.name||'',l=(v.lang||'').replace('_','-');let s=0;
+ if(/natural|neural|premium|enhanced|siri/i.test(n))s+=60;else if(/online/i.test(n))s+=45;else if(/google/i.test(n))s+=35;
+ if(S.accent==='us'?/en-US/i.test(l):/en-GB/i.test(l))s+=40;else if(/en-(US|GB)/i.test(l))s+=8;
+ const fe=FEM.test(n),ma=MAL.test(n)&&!fe;if(S.av==='f'?fe:ma)s+=25;else if(S.av==='f'?ma:fe)s-=40;return s}
+function bList(){try{return window.speechSynthesis?speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)&&!NOVELTY.test(v.name)).sort((a,b)=>vScore(b)-vScore(a)):[]}catch(e){return[]}}
+function vIdx(){const n=(tts?VO:bList()).length;let i=S.vi[S.av];if(i==null||i<0||i>=n)i=tts?(S.av==='f'?1:3):0;return i}
 function voiceLabel(){const b=$('#voiceBtn');if(!b)return;const list=tts?VO:bList();b.hidden=!S.sound||!list.length;if(!list.length)return;const v=list[vIdx()];const n=tts?v[0].toUpperCase()+v.slice(1):String(v.name||'').split(/[\s(]/)[0];b.textContent='Voice';b.title='Voice: '+n+' (tap to change)'}
 try{if(window.speechSynthesis)speechSynthesis.onvoiceschanged=voiceLabel}catch(e){}
 const dur=t=>Math.min(9000,Math.max(1200,String(t).split(/\s+/).length*340/LV[S.level].rate));
@@ -427,7 +434,7 @@ function speak(text){return new Promise(res=>{
  const go=()=>{
   if(tok!==sTok){fin();return}
   if(!S.sound){fake();return}
-  if(tts){talk(true,ms+4000);tts.speak(String(text).slice(0,1900),{voice:VO[vIdx()],rate:LV[S.level].rate,language:'en'}).then(fin).catch(e=>{if(e&&e.code==='not_granted'){tts=null;voiceLabel()}fake()});return}
+  if(tts){talk(true,ms+4000);const say=(lang,again)=>tts.speak(String(text).slice(0,1900),{voice:VO[vIdx()],rate:LV[S.level].rate,language:lang}).then(fin).catch(e=>{const c=e&&e.code;if(again&&!['not_granted','busy','rate_limited','viewer_stopped'].includes(c)){say('en',false);return}if(c==='not_granted'){tts=null;voiceLabel()}fake()});say(S.accent==='us'?'en-US':'en-GB',true);return}
   const ss=window.speechSynthesis;
   if(ss&&window.SpeechSynthesisUtterance){try{ss.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=LV[S.level].rate;const v=bList()[vIdx()];if(v){u.voice=v;u.lang=v.lang}let st=false;u.onstart=()=>{st=true};u.onend=fin;u.onerror=fin;talk(true,ms+4000);ss.speak(u);
    setTimeout(()=>{if(!st&&!ss.speaking&&!done){noVoice();fake()}},1800);setTimeout(fin,ms*2+6000);return}catch(e){}}
@@ -470,13 +477,13 @@ function leave(){hush();if(listening)stopListen(false);clearTimeout(nudgeT);$('#
 function hush(){sTok++;try{if(tts&&tts.stop)tts.stop()}catch(e){}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}talk(false)}
 
 /* ---------- local English checker (used in practice mode) ---------- */
-const BASE={went:'go',ate:'eat',saw:'see',came:'come',took:'take',bought:'buy',had:'have',made:'make',gave:'give',did:'do',booking:'book',ordering:'order',buying:'buy',going:'go',having:'have',making:'make',travelling:'travel',traveling:'travel',reserving:'reserve',paying:'pay',asking:'ask'};
+const BASE={got:'get',met:'meet',went:'go',ate:'eat',saw:'see',came:'come',took:'take',bought:'buy',had:'have',made:'make',gave:'give',did:'do',booking:'book',ordering:'order',buying:'buy',going:'go',having:'have',making:'make',travelling:'travel',traveling:'travel',reserving:'reserve',paying:'pay',asking:'ask'};
 const UNC={informations:'information',advices:'advice',furnitures:'furniture',luggages:'luggage',baggages:'baggage',equipments:'equipment',homeworks:'homework'};
 const NUM='(two|three|four|five|six|seven|eight|nine|ten|[2-9]|\\d{2,})';
 const RULES=[
  [/\b(i am|i'm) agree\b/gi,'I agree','We say "I agree", without "am".'],
  [/\b(?:i am|i'm) go\b/gi,"I'm going",'Say "I\'m going" or "I go".'],
- [/\b(?:i am|i'm) (want|need|like|have|know|think|live|work|study|love)\b/gi,(m,v)=>'I '+v,'No "am" before "want": say "I want" or "I would like".'],
+ [/\b(?:i am|i'm) (want|need|like|have|know|think|live|work|study|love|understand|remember|prefer|hope|believe|feel)\b/gi,(m,v)=>'I '+v,'No "am" before "want": say "I want" or "I would like".'],
  [/\b(can|could|should|must|will|would) (i|you|we|he|she|they) to\b/gi,'$1 $2','After "can" or "could", use the verb without "to".'],
  [/\b(can|could|should|must) to\b/gi,'$1','After "can" or "could", use the verb without "to".'],
  [/\bi have (\d+) years\b/gi,'I am $1 years old','For age, we say "I am 20 years old".'],
@@ -487,7 +494,7 @@ const RULES=[
  [/\b(forward )?to (booking|ordering|buying|going|having|making|travelling|traveling|reserving|paying|asking)\b/gi,(m,f,v)=>f?m:'to '+BASE[v.toLowerCase()],'After "to", use the base verb: "to book".'],
  [/\bmore (better|cheaper|bigger|smaller|faster|easier|nicer|closer|larger)\b/gi,'$1','No "more" before "-er" words: just "cheaper".'],
  [/\b(informations|advices|furnitures|luggages|baggages|equipments|homeworks)\b/gi,m=>UNC[m.toLowerCase()],'This word has no plural form.'],
- [/\ba (help|advice|information|luggage|furniture|homework)\b/gi,'some $1','This word is uncountable: "some help".'],
+ [/\b(?:a|an) (help|advice|information|luggage|furniture|homework)\b/gi,'some $1','This word is uncountable: "some help".'],
  [new RegExp('\\b'+NUM+' person\\b','gi'),'$1 people','For more than one person, we say "people".'],
  [new RegExp('\\b'+NUM+' (night|ticket|room|bag|day|week|hour|minute|adult|bottle|coffee|juice|shirt|seat)\\b','gi'),'$1 $2s','Add "s" for more than one: "three nights".'],
  [new RegExp('\\b'+NUM+' child\\b','gi'),'$1 children','The plural of "child" is "children".'],
@@ -498,21 +505,70 @@ const RULES=[
  [/\bexplain me\b/gi,'explain to me','We say "explain to me".'],
  [/\bdiscuss about\b/gi,'discuss','"Discuss" does not need "about".'],
  [/\bi very (like|love|enjoy)\b/gi,'I really $1','Say "I really like…" or "I like… very much".'],
+ [/\b((?:does|did|do|can|could|will|would|should|may|might|must|to|let|make|makes|help|helps|cannot|can't|don't|doesn't|didn't|won't|is|was|isn't|wasn't|are)\s+)?(he|she|it)\s+(go|do|have|like|want|need|work|live|take|come|eat|drink|play|watch|know|study|speak|leave|arrive)\b/gi,(m,pre,sb,v)=>pre?m:sb+' '+({have:'has',do:'does',go:'goes',watch:'watches',study:'studies'}[v.toLowerCase()]||v+'s'),'With he, she and it, add "s": "she likes", "he goes".'],
+ [/\b(yesterday|last (?:night|week|weekend|month|year|friday|saturday|sunday|monday|tuesday|wednesday|thursday)),? (i|we|he|she|they|you) (go|eat|see|come|buy|have|take|visit|play|watch|do|make|meet|stay|drink|get)\b/gi,(m,t,sb,v)=>m.slice(0,m.length-v.length)+PAST[v.toLowerCase()],'For the past, use the past form: "Yesterday I went…".'],
+ [/\bdid (you|he|she|they|we|i) (went|ate|saw|came|took|bought|had|made|gave|did|got|met)\b/gi,(m,sb,v)=>m.slice(0,m.length-v.length)+BASE[v.toLowerCase()],'After "did", use the base verb: "Did you go?"'],
+ [/\b(i am|i'm|you are|you're|he is|he's|she is|she's) (student|teacher|doctor|nurse|driver|waiter|pilot|chef|tourist|visitor|guest|customer|passenger|cashier|receptionist|mechanic|farmer|technician)\b/gi,(m,a,b)=>a+' a '+b,'Use "a" before a job: "I am a student".'],
+ [/\b(i am|i'm|you are|you're|he is|he's|she is|she's) (engineer|accountant|electrician|officer|artist|employee|engineering student)\b/gi,(m,a,b)=>a+' an '+b,'Use "an" before a job that starts with a vowel: "an engineer".'],
+ [/\bsince (one|two|three|four|five|six|seven|ten|a|\d+) (days?|weeks?|months?|years?|hours?|minutes?)\b/gi,'for $1 $2','Use "for" with a length of time: "for two days".'],
+ [/\b(make|making|made) (a |some )?(photos?|pictures?)\b/gi,(m,v)=>m.replace(/^\w+/,{make:'take',making:'taking',made:'took'}[v.toLowerCase()]),'We "take" a photo.'],
+ [/\b(do|did|doing) (a )?mistakes?\b/gi,(m,v)=>m.replace(/^\w+/,{do:'make',did:'made',doing:'making'}[v.toLowerCase()]),'We "make" a mistake.'],
+ [/\b(have|has|had) (headache|cold|fever|cough|stomachache|toothache|sore throat)\b/gi,'$1 a $2','We say "I have a headache" or "a cold".'],
+ [/\b(go|goes|went|come|comes|came|going|coming|return|returned|get|got) to home\b/gi,'$1 home','We say "go home", without "to".'],
+ [/\bpeople is\b/gi,'people are','"People" is plural: "people are".'],
+ [/\bmuch (people|friends|bags|rooms|tickets|things|cars|children|books)\b/gi,'many $1','Use "many" with things you can count.'],
+ [/\bmany (money|time|information|water|luggage|homework|traffic)\b/gi,'much $1','Use "much" with things you cannot count.'],
+ [/\bthere is (many|two|three|four|five|some people|\d+)\b/gi,'there are $1','Use "there are" for more than one.'],
+ [/(^|[.!?,]\s*|\b(?:yes|no|and|but|so|because)\s+)its (a|an|very|so|too|not|really|delicious|nice|good|great|ok|okay|fine|beautiful|expensive|cheap|cold|hot|open|closed|late|early|time)\b/gi,"$1it's $2",'Use "it\'s" (it is) here.'],
+ [/\b(will|won't) to\b/gi,'$1','After "will", use the verb without "to".'],
+ [/\b(have|get|see|pay|bring|check) (bill|menu)\b/gi,'$1 the $2','Add "the": "the bill", "the menu".'],
  [/\ba ([aeiou][a-z]*)/gi,(m,w)=>/^(uni|use|usu|eu|one|once)/i.test(w)?m:(m[0]==='A'?'An ':'an ')+w,'Use "an" before a vowel sound: "an apple".'],
  [/\ban ([bcdfghj-np-tv-z][a-z]*)/gi,(m,w)=>/^(hour|honest|honou?r|heir)/i.test(w)?m:(m[0]==='A'?'A ':'a ')+w,'Use "a" before a consonant sound: "a ticket".']
 ];
 const UPS=[
  [/\bi want\b/gi,'I would like','"I would like…" sounds more polite.'],
+ [/(^|[^A-Za-z'])i(?=[^A-Za-z]|$)/g,'$1I','Write "I" with a capital letter.'],
  [/^\s*(?:please )?give me\b/gi,'Could I have','"Could I have…, please?" sounds more polite.'],
  [new RegExp('\\b'+NUM+' persons\\b','gi'),'$1 people','We usually say "people".'],
  [/\breturn back\b/gi,'return','"Return" already means "go back".'],
  [/\brepeat again\b/gi,'repeat','"Repeat" already means "say again".'],
  [/\bthe price is (very )?expensive\b/gi,(m,v)=>'the price is '+(v||'')+'high','Things are "expensive"; prices are "high".']
 ];
+const PAST={go:'went',eat:'ate',see:'saw',come:'came',buy:'bought',have:'had',take:'took',visit:'visited',play:'played',watch:'watched',do:'did',make:'made',meet:'met',stay:'stayed',drink:'drank',get:'got'};
+/* spelling: a list of about 30,000 common English words (words.txt) plus Omani names, places and food */
+let RANK=null;
+try{fetch('words.txt').then(r=>r.ok?r.text():'').then(t=>{if(!t)return;const m=new Map();t.split(/\r?\n/).forEach((x,i)=>{x=x.trim().toLowerCase();if(x&&!m.has(x))m.set(x,i)});RANK=m}).catch(()=>{})}catch(e){}
+const SHORT={u:'you',ur:'your',r:'are',pls:'please',plz:'please',pleas:'please',thx:'thanks',thanx:'thanks',im:"I'm",dont:"don't",cant:"can't",wont:"won't",didnt:"didn't",doesnt:"doesn't",isnt:"isn't",arent:"aren't",wasnt:"wasn't",werent:"weren't",couldnt:"couldn't",shouldnt:"shouldn't",wouldnt:"wouldn't",ive:"I've",youre:"you're",theyre:"they're",thats:"that's",whats:"what's",hes:"he's",shes:"she's",alot:'a lot',teh:'the',wat:'what',wen:'when',wher:'where',thier:'their',becuase:'because',becouse:'because',beacuse:'because',wich:'which',untill:'until',recieve:'receive',definately:'definitely',seperate:'separate',tommorow:'tomorrow',tomorow:'tomorrow',gonna:'going to',wanna:'want to',gotta:'have to',cuz:'because',coz:'because',tho:'though',thru:'through',nite:'night',ya:'you',hav:'have',wid:'with',gud:'good',gr8:'great'};
+const AL='abcdefghijklmnopqrstuvwxyz';
+function ed1(w){const o=new Set();for(let i=0;i<=w.length;i++){const a=w.slice(0,i),b=w.slice(i);if(b){o.add(a+b.slice(1));if(b.length>1)o.add(a+b[1]+b[0]+b.slice(2));for(const c of AL)o.add(a+c+b.slice(1))}for(const c of AL)o.add(a+c+b)}o.delete(w);return o}
+function pen(w,c){let p=c.length>w.length?1:c.length<w.length?3:([...w].sort().join('')===[...c].sort().join('')?1:3);if(c.length===w.length+1&&/(.)\1/.test(c)&&c.replace(/(.)\1/,'$1')===w)p=.25;if(c[0]!==w[0])p*=3;return p}
+function bestOf(w,set){let bw=null,bs=1e15;for(const x of set){const r=RANK.get(x);if(r==null)continue;const sc=(r+20)*pen(w,x);if(sc<bs){bs=sc;bw=x}}return bw}
+function vocab(){const s=scn();const t=s.st.map(x=>x[0]+' '+x[1].join(' ')).join(' ')+' '+s.bye+' '+(S.hints||[]).join(' ');return new Set((t.toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g)||[]).filter(x=>x.length>2))}
+function pk(w){w=w.replace(/tch/g,'ch').replace(/ch/g,'x').replace(/ph/g,'f').replace(/ck/g,'k').replace(/c(?=[eiy])/g,'s').replace(/[cq]/g,'k').replace(/x/g,'ks').replace(/z/g,'s');return (w[0]+w.slice(1).replace(/[aeiouyhw']/g,'')).replace(/(.)\1+/g,'$1')}
+function suggest(w,far){if(w.length>18)return null;const V=S.sc?vocab():new Set(),e1=ed1(w),C=new Map();
+ for(const x of e1)if(RANK.has(x))C.set(x,1);
+ if(w.length>=4)for(const e of e1)for(const x of ed1(e))if(x!==w&&RANK.has(x)&&!C.has(x))C.set(x,2);
+ if(!C.size)return null;const k=pk(w);let bw=null,bs=1e15,ph=false;
+ for(const [x,d] of C){const same=pk(x)===k;if(ph&&!same)continue;if(same&&!ph){ph=true;bs=1e15}const sc=(RANK.get(x)+20)*pen(w,x)*(d===2?3:1)*(V.has(x)?.15:1);if(sc<bs){bs=sc;bw=x}}
+ if(!ph&&C.get(bw)===2&&(!far||w.length<5))return null;return bw}
+const keepCase=(o,r)=>o===o.toUpperCase()&&o.length>1?r.toUpperCase():/^[A-Z]/.test(o)?r.charAt(0).toUpperCase()+r.slice(1):r;
+function spell(text){const fixes=[];if(!RANK)return{text,fixes};const mine=S.name.toLowerCase().split(/\s+/);
+ const out=text.replace(/[A-Za-z]+(?:'[A-Za-z]+)?/g,(w,off)=>{const lw=w.toLowerCase();
+  if(SHORT[lw]){fixes.push(SHORT[lw]);return keepCase(w,SHORT[lw])}
+  if(RANK.has(lw)||UNC[lw]||mine.includes(lw)||(lw.endsWith("'s")&&RANK.has(lw.slice(0,-2))))return w;
+  const before=text.slice(0,off),start=!/\S/.test(before)||/[.!?]\s*$/.test(before);
+  if(/^[A-Z]/.test(w)&&!start)return w;
+  const c=suggest(lw,!/^[A-Z]/.test(w));if(!c)return w;fixes.push(c);return keepCase(w,c)});
+ return{text:out,fixes}}
 function check(text){
- let w=text,tip='',kind=null;
- const run=(list,k)=>{for(const [re,rep,t] of list){re.lastIndex=0;const n=w.replace(re,rep);if(n!==w){w=n;if(!tip)tip=t;if(k==='fix'||!kind)kind=k}}};
+ text=String(text).replace(/[’‘]/g,"'");
+ const sp=spell(text);let w=sp.text,tip='',kind=null;
+ w=w.replace(/\b(for|of|the|my|these|those|about|only|just) tow\b/gi,(m,a)=>{sp.fixes.push('two');return a+' two'}).replace(/\b(to|can|could|will|i'll|please) by\b/gi,(m,a)=>{sp.fixes.push('buy');return a+' buy'});
+ const T={fix:'',upgrade:''};
+ const run=(list,k)=>{for(const [re,rep,t] of list){re.lastIndex=0;const n=w.replace(re,rep);if(n!==w){w=n;if(!T[k])T[k]=t;if(k==='fix'||!kind)kind=k}}};
  run(RULES,'fix');run(UPS,'upgrade');
+ const st=sp.fixes.length?'Check the spelling: '+[...new Set(sp.fixes)].slice(0,3).map(x=>'"'+x+'"').join(', ')+'.':'';if(st)kind='fix';
+ tip=[T.fix,st,/capital letter/.test(T.upgrade)&&(T.fix||st)?'':T.upgrade].filter(Boolean).slice(0,2).join(' ');
  if(!kind)return null;
  w=w.replace(/\bi\b/g,'I').replace(/\s+/g,' ').trim();
  w=w.charAt(0).toUpperCase()+w.slice(1);
@@ -540,11 +596,12 @@ Usual steps of this role-play (follow them loosely, one step per reply):
 ${steps}
 When the situation is complete, finish with something like: "${fx(s.bye)}"
 Rules:
+- Speak natural, friendly ${S.accent==='us'?'American':'British'} English, the way a native speaker really talks (everyday phrases, contractions like "I'll" and "that's"), not stiff textbook English, and use ${S.accent==='us'?'American':'British'} spelling.
 - Stay in the role-play and use simple, natural, everyday English. Your "reply" is 1 or 2 short sentences (under 30 words) and ends with a question or a clear prompt, unless the situation is finished. Places are in Oman and prices are in Omani rials.
 - Tone: warm, calm, kind, patient and motivating, like a teacher who really enjoys helping this learner.
 - Strict content rules: never mention or discuss religion, romance, dating, boyfriends or girlfriends, anything sexual, alcohol, pork, gambling, drugs or politics, or anything against Islamic values or Omani culture. All food and drinks are halal (for example tea, karak, coffee, juice, chicken, fish, rice). If the learner brings up any of these, do not discuss it; kindly steer back to the situation.
 - If the learner asks what a word means or asks for help, explain very simply in the reply, then continue.
-- Check only the learner's LAST message. Ignore capital letters, punctuation and small typos. Short natural answers like "Two, please." are fine.
+- Check only the learner's LAST message for spelling, grammar and word choice. Always correct spelling mistakes, even small typos, and name the corrected words in "tip" (for example: Spelling: "restaurant"). Also correct a lowercase "i". Ignore only a missing full stop at the end and a missing capital at the very start. Short natural answers like "Two, please." are fine.
   kind "great" = correct and natural. kind "upgrade" = correct but there is a more natural or polite way. kind "fix" = a real grammar or vocabulary mistake. If the learner wrote in Arabic or another language, use "fix" and put the English sentence in "better".
 - "better": the learner's sentence corrected, keeping their meaning; "" when kind is "great". "tip": one short, friendly reason (under 14 words); "" when kind is "great".
 - "praise": 2 to 6 warm words, varied, sometimes with the learner's name.
@@ -576,7 +633,7 @@ async function askAI(text){
 /* ---------- rendering ---------- */
 function show(id){['pick','scene','chat'].forEach(s=>{$('#'+s).hidden=s!==id});S.screen=id;$('#homeBtn').hidden=id==='pick';if(id!=='chat')$('#win').hidden=true}
 function seg(sel,v){document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)))}
-function pickState(){document.querySelectorAll('.av').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.av===S.av)));$('#hatFld').hidden=S.av!=='m';$('#capM').textContent='Omani man · dishdasha and '+(S.hat==='kumma'?'kumma cap':'massar');seg('#lvlSeg',S.level);seg('#hatSeg',S.hat)}
+function pickState(){document.querySelectorAll('.av').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.av===S.av)));$('#hatFld').hidden=S.av!=='m';$('#capM').textContent='Omani man · dishdasha and '+(S.hat==='kumma'?'kumma cap':'massar');seg('#lvlSeg',S.level);seg('#hatSeg',S.hat);seg('#accSeg',S.accent)}
 function drawPick(){$('#picF').innerHTML=sceneSVG('pf')+robotSVG('f','','rf');$('#picM').innerHTML=sceneSVG('pm')+robotSVG('m',S.hat,'rm');$('#nameIn').value=S.name;pickState()}
 function drawScenes(){$('#sceneHead').innerHTML=robotSVG(S.av,S.hat,'rh',true);$('#sceneSay').textContent=`Lovely to meet you, ${nm()}! Where shall we practise today?`;
  $('#scGrid').innerHTML=SC.map((s,i)=>`<button class="sc" type="button" data-i="${i}"><i style="background:${s.c}">${ic(s.ic)}</i><b>${esc(s.t)}</b><small>${esc(s.s)}</small>${S.done.includes(s.id)?`<span class="ok" title="Completed">${ic('check')}</span>`:''}</button>`).join('')}
@@ -610,6 +667,7 @@ async function send(raw){
  busy=true;renderAll();thinking(true);
  let r=null;
  if(sample&&!aiOff){try{r=await askAI(text)}catch(e){if(e&&e.code==='not_granted'){aiOff=true;modeTag()}r=null}}
+ if(r&&r.kind==='great'){const c=check(text);if(c&&c.kind==='fix'){r.kind='fix';r.better=c.better;r.tip=c.tip}}
  if(!r)r=localTurn(text);
  busy=false;thinking(false);apply(r);
 }
@@ -640,6 +698,7 @@ $('#homeBtn').addEventListener('click',()=>{leave();show('pick');drawPick()});
 $('#backBtn').addEventListener('click',()=>{leave();show('scene');drawScenes()});
 document.querySelectorAll('.av').forEach(b=>b.addEventListener('click',()=>{S.av=b.dataset.av;save();pickState();document.querySelectorAll('.cap .hi').forEach(h=>h.textContent='');const g=`Hello! I'm ${BOT[S.av]}. Let's practise English together!`;b.querySelector('.hi').textContent=g;speak(g)}));
 $('#lvlSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.level=b.dataset.v;seg('#lvlSeg',S.level);save()});
+$('#accSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.accent=b.dataset.v;S.vi={f:-1,m:-1};seg('#accSeg',S.accent);save();voiceLabel();speak(`Hello! I'm ${BOT[S.av]}, and this is my ${S.accent==='us'?'American':'British'} English.`)});
 $('#hatSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.hat=b.dataset.v;$('#picM').innerHTML=sceneSVG('pm')+robotSVG('m',S.hat,'rm');pickState();save()});
 $('#nameIn').addEventListener('input',e=>{S.name=e.target.value.slice(0,24);save()});
 $('#goBtn').addEventListener('click',()=>{show('scene');drawScenes();speak($('#sceneSay').textContent)});

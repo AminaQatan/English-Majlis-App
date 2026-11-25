@@ -1,6 +1,6 @@
 /* English Majlis: offline support. Change the version when you upload a new game file. */
-const CACHE = 'english-majlis-v1';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
+const CACHE = 'english-majlis-v2';
+const CORE = ['./', './index.html', './words.txt', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

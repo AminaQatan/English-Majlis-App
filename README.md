@@ -25,7 +25,8 @@ Meet & greet · Restaurant · Hotel · Bus tickets · Airport · Clothes shop ·
 ## Features
 
 - Your friend speaks first and replies automatically after you finish talking.
-- Mistakes are corrected straight away in a friendly, motivating way, with a short reason, **Practise it** and **Listen** buttons.
+- Mistakes are corrected straight away in a friendly, motivating way: spelling, grammar and more natural wording, with a short reason, **Practise it** and **Listen** buttons.
+- Choose a **British** or **American** accent. The game picks the most natural English voice on each device.
 - Stars, streaks and a "Well done" screen with the phrases to remember.
 - Example answers ("Ideas") for players who get stuck.
 - Respectful content only: no religion, romance, alcohol, pork or anything against Islamic values.
@@ -33,8 +34,9 @@ Meet & greet · Restaurant · Hotel · Bus tickets · Airport · Clothes shop ·
 ## Good to know
 
 - On this website the game runs in **Practice mode**: built-in conversations and correction rules. The live AI conversation works when the game is opened inside Claude.
-- The voice uses the device's own text-to-speech. Hands-free talking needs Chrome or Safari and microphone permission.
-- After uploading a new `index.html`, change the version in `sw.js` (for example `english-majlis-v2`) so installed apps pick up the update.
+- The voice uses the device's own text-to-speech. For the most natural voice on iPhone or iPad, download an Enhanced or Premium English voice in Settings → Accessibility → Spoken Content → Voices. On Windows, Microsoft Edge has very natural voices.
+- Hands-free talking needs Chrome or Safari and microphone permission.
+- After uploading a new `index.html`, change the version in `sw.js` (for example from `english-majlis-v2` to `english-majlis-v3`) so installed apps pick up the update.
 
 ## Files
 
@@ -42,6 +44,7 @@ Meet & greet · Restaurant · Hotel · Bus tickets · Airport · Clothes shop ·
 |---|---|
 | `index.html` | The game |
 | `manifest.webmanifest` | App name, colours and icons |
+| `words.txt` | Word list for spelling corrections |
 | `sw.js` | Offline support |
 | `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png` | App icons |
 
