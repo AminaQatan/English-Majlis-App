@@ -1,0 +1,54 @@
+# Builds the English Majlis Android app (phones, tablets and Android / Google TV)
+# every time the game files change, and puts the APK on the Releases page.
+name: Build Android app
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Put the game inside the app
+        run: |
+          mkdir -p android/app/src/main/assets/www
+          cp index.html words.txt manifest.webmanifest icon-192.png icon-512.png apple-touch-icon.png android/app/src/main/assets/www/
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build the APK
+        working-directory: android
+        run: gradle assembleDebug --no-daemon
+
+      - name: Name the file
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk EnglishMajlis.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EnglishMajlis-APK
+          path: EnglishMajlis.apk
+
+      - name: Publish on the Releases page
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: app-${{ github.run_number }}
+          name: English Majlis app ${{ github.run_number }}
+          body: Install EnglishMajlis.apk on Android phones, tablets and Android / Google TV.
+          make_latest: true
+          files: EnglishMajlis.apk
