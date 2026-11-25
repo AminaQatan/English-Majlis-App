@@ -1,0 +1,19 @@
+{
+  "name": "English Majlis",
+  "short_name": "English Majlis",
+  "description": "Chat in everyday English with an Omani friend who corrects you kindly.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d4a55",
+  "theme_color": "#083942",
+  "lang": "en",
+  "categories": ["education", "games"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
